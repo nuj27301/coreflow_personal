@@ -39,6 +39,9 @@
 <main class="flex-shrink-0">
   <div class="container">
     
+      	<!-- 1차 카테고리 영역 -->
+  	<th:block th:replace="~{fragments/categorymenu.html::category}"></th:block>
+  	
     <th:block layout:fragment="content"></th:block>
     
   </div>

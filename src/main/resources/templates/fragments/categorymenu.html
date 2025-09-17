@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="category">
+	
+	<!-- 1차 카테고리 -->
+	<ul class="nav justify-content-center" id="category_menu">
+	  <li class="nav-item first_category" th:each= "menu : ${firstCategoryList}">
+	    <a class="nav-link active" aria-current="page" href="#" th:data-cate_code="${menu.cate_code}" th:text="${menu.cate_name}" >Active</a>
+	  </li>
+	</ul>
+	
+	<!-- 2차 카테고리 -->
+	 <ul class="nav justify-content-center" id="subCategory_menu"></ul>
+	 
+	<script>
+		$(document).ready(function() {
+			$("ul#category_menu li.first_category").on("click", function() {
+				let current = $(this); 
+				let firstCategoryCode = current.find("a.nav-link").data("cate_code");
+
+				$.ajax({
+					url: '/category/secondCategoryList/' + firstCategoryCode,
+					type: 'get',
+					dataType: 'json',
+					success: function(data) {
+						let subCategoryStr = "";
+						for(let i=0; i<data.length; i++) {
+							subCategoryStr += `<li class="nav-item">`;
+							subCategoryStr += `<a class="nav-link active" aria-current="page" href="#" data-subCategoryCode="${data[i].cate_code}">${data[i].cate_name}</a>`;
+							subCategoryStr += `</li>`;
+						}
+
+						$("ul#subCategory_menu").empty();
+						$("ul#subCategory_menu").append(subCategoryStr);
+
+
+					}
+				});
+			});
+		});
+
+
+		$("ul#subCategory_menu").on("click", "li.nav-item a.nav-link", function() {
+			let cate_code = $(this).data("subcategorycode");
+			let cate_name = encodeURIComponent($(this).html()); 
+			location.href = `/product/pro_list?cate_name=${cate_name}&cate_code=${cate_code}`;
+		});
+
+	</script>
+	</th:block>
+</html>

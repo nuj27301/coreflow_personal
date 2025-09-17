@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.coreflow.shop.admin.product.AdProductMapper">
+
+<insert id="pro_insert" parameterType="com.coreflow.shop.common.dto.ProductDTO">
+  INSERT INTO products (
+    cate_code,
+    pro_name,
+    pro_price,
+    pro_discount,
+    pro_publisher,
+    pro_summary,
+    pro_up_folder,
+    pro_img,
+    pro_amount
+  )
+  VALUES (
+    #{cate_code},
+    #{pro_name},
+    #{pro_price},
+    #{pro_discount},
+    #{pro_publisher},
+    #{pro_summary},
+    #{pro_up_folder},
+    #{pro_img},
+    #{pro_amount}
+  )
+</insert> 
+
+<select id="pro_list" resultType="com.coreflow.shop.common.dto.ProductDTO"  parameterType="com.coreflow.shop.common.utils.SearchCriteria" >
+	select 
+		pro_num,
+		cate_code,
+		pro_name,
+		pro_price,
+		pro_discount,
+		pro_publisher,
+		pro_summary,
+		pro_up_folder,
+		pro_img,
+		pro_amount,
+		pro_buy,
+		pro_review, 
+		pro_date,pro_updatedate 
+	
+	from 
+		products 
+	
+	where 
+		pro_num > 0 
+
+	<include refid="search"></include>
+	
+		limit #{pageStart},#{perPageNum} 
+ </select>
+
+
+
+<select id="getTotalCount" resultType="int">
+
+	select 
+		count(*) 
+	
+	from 
+		products 
+	where 
+		pro_num > 0
+	
+	<include refid="search"></include>
+
+</select>
+
+<sql id="search"> <!-- 공통 sql 보일러플레이트방지  --> 
+
+	<if test="searchType != null">
+		<if test="searchType == 'n'.toString()">
+			and pro_name like concat('%',#{keyword},'%') 
+		</if>
+		
+		<if test="searchType == 'c'.toString()"> 
+			and pro_num like concat('%',#{keyword},'%')
+		</if> 
+		
+		<if test="searchType == 'p'.toString()"> 
+			and pro_publisher like concat('%',#{keyword},'%')
+		</if>
+		
+		<if test="searchType == 'np'.tostring"> 
+			and pro_name like concat('%',#{keyword},'%') 
+			or
+			pro_publisher like concat('%',#{keyword},'%')
+		</if>
+	</if>
+</sql>
+
+
+
+<select id="pro_edit_form" resultType="com.coreflow.shop.common.dto.ProductDTO">
+select 
+	pro_num,
+	cate_code,
+	pro_name,
+	pro_price,
+	pro_discount,
+	pro_publisher,
+	pro_summary,
+	pro_up_folder,
+	pro_img,
+	pro_amount,
+	pro_buy,
+	pro_date,
+	pro_updatedate 
+
+from products 
+
+where 
+    pro_num = #{pro_num} <!-- pro_num 만 바인딩 하는 것은 상품수정이라서 -->
+
+</select> 
+
+ <!-- 상품수정(변경) -->
+<update id="pro_edit_modify" parameterType="com.coreflow.shop.common.dto.ProductDTO">
+
+update  
+	products
+set
+	pro_num=#{pro_num}, 
+	cate_code=#{cate_code},
+	pro_name=#{pro_name},
+	pro_price=#{pro_price},
+	pro_discount=#{pro_discount},
+	pro_publisher=#{pro_publisher},
+	pro_summary=#{pro_summary},
+	pro_up_folder=#{pro_up_folder},
+	pro_img=#{pro_img},
+	pro_amount=#{pro_amount},
+	pro_buy=#{pro_buy},
+	pro_updatedate=now() 
+where
+	pro_num=#{pro_num}
+
+  	
+</update> 
+
+<!-- 삭제  -->
+
+<delete id="pro_delete" parameterType="Integer">
+
+delete from 
+  products 
+where 
+    pro_num = #{pro_num}  
+
+</delete> 
+
+
+</mapper> 

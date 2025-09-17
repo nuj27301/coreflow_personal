@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+ <th:block th:fragment="category">
+  
+    <ul class="nav justify-content-center" id="category_menu">
+  <li class="nav-item first_category" th:each= "menu : ${cate_list}">
+    <a class="nav-link active" aria-current="page" href="#" th:data-cate_code="${menu.cate_code}" th:text="${menu.cate_name}" >Active</a>
+  </li>
+</ul>
+    <script> 
+
+  <!-- 2차 카테고리 영역 -->
+    <ul class="nav justify-content-center" id="subCategory_menu"></ul>
+
+
+
+      $(document).ready(function(){
+          //1차 카테고리 클릭 이벤트 설정 
+          
+          $("ul#category_menu  li.first_category").on("click", function(){
+
+            console.log("1차카테고리");
+             
+            let current = $(this);//1차 카테고리를 성택한  카테고리 li태그
+            current.find("a.nav-link").data("cate_code"); 
+
+            let firstCategoryCode = current.find("a.nav.link").data("cate_code");
+
+            // AJAX
+            
+            $.ajax({
+              url:"amin/category/secondCategoryList/"+ firstCategoryCode,
+              type:'get',
+              dataType:JSON,
+              success:function(data){
+
+                console.log("2차카테고리", data);
+              }
+            })
+          
+          });
+      });
+    </script>
+ </th:block>
+</html>
