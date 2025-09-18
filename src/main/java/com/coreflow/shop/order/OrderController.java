@@ -21,6 +21,9 @@ import com.coreflow.shop.common.utils.FileUtils;
 
 import com.coreflow.shop.mail.EmailService;
 import com.coreflow.shop.member.MemberService;
+
+import jakarta.servlet.http.HttpSession;
+
 import com.coreflow.shop.common.dto.EmailDTO;
 import com.coreflow.shop.common.dto.MemberDTO;
 
@@ -43,9 +46,8 @@ public class OrderController {
 	
 	// 주문정보페이지
 	@GetMapping("/order_info")
-	public void order_info(CartDTO dto, String type, Model model) throws Exception {
-		dto.setMbsp_id("user01");
-		String mbsp_id = dto.getMbsp_id();
+	public void order_info(CartDTO dto, String type, HttpSession session, Model model) throws Exception {
+		String mbsp_id = ((MemberDTO) session.getAttribute("login_auth")).getMbsp_id();
 		
 		if(type.equals("buy")) cartService.cart_add(dto);
 		
@@ -73,8 +75,8 @@ public class OrderController {
 	
 	// 주문정보저장
 	@PostMapping("/order_save")
-	public String order_save(OrderDTO dto, String p_method, String account_transfer, String sender, RedirectAttributes rttr) throws Exception {
-		dto.setMbsp_id("user01");
+	public String order_save(OrderDTO dto, String p_method, String account_transfer, String sender, HttpSession session, RedirectAttributes rttr) throws Exception {
+		String mbsp_id = ((MemberDTO) session.getAttribute("login_auth")).getMbsp_id();
 		
 		orderService.order_process(dto, p_method, account_transfer, sender);
 		
