@@ -48,8 +48,9 @@ public class OrderController {
 	@GetMapping("/order_info")
 	public void order_info(CartDTO dto, String type, HttpSession session, Model model) throws Exception {
 		String mbsp_id = ((MemberDTO) session.getAttribute("login_auth")).getMbsp_id();
+
 		dto.setMbsp_id(mbsp_id);
-		
+	
 		if(type.equals("buy")) cartService.cart_add(dto);
 		
 		List<Map<String, Object>> orderDetails = cartService.cart_list(mbsp_id);
@@ -79,6 +80,7 @@ public class OrderController {
 	public String order_save(OrderDTO dto, String p_method, String account_transfer, String sender, HttpSession session, RedirectAttributes rttr) throws Exception {
 		String mbsp_id = ((MemberDTO) session.getAttribute("login_auth")).getMbsp_id();
 		dto.setMbsp_id(mbsp_id);
+
 		
 		orderService.order_process(dto, p_method, account_transfer, sender);
 		
