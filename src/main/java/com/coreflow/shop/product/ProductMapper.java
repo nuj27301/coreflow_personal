@@ -12,4 +12,6 @@ public interface ProductMapper {
 	List<ProductDTO> getProductList(@Param("cri") SearchCriteria cri, @Param("cate_code") Integer cate_code);
 	
 	int getProductListCount(Integer cate_code);
+	
+	List<ProductDTO> getRecommendList();
 }

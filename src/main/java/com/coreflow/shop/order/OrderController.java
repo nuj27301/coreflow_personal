@@ -48,7 +48,9 @@ public class OrderController {
 	@GetMapping("/order_info")
 	public void order_info(CartDTO dto, String type, HttpSession session, Model model) throws Exception {
 		String mbsp_id = ((MemberDTO) session.getAttribute("login_auth")).getMbsp_id();
-		
+
+		dto.setMbsp_id(mbsp_id);
+	
 		if(type.equals("buy")) cartService.cart_add(dto);
 		
 		List<Map<String, Object>> orderDetails = cartService.cart_list(mbsp_id);
@@ -64,7 +66,7 @@ public class OrderController {
 		model.addAttribute("item_name", item_name);
 		model.addAttribute("quantity", orderDetails.size());
 		
-		model.addAttribute("order_total_price", cartService.cart_total_price(dto.getMbsp_id()));
+		model.addAttribute("order_total_price", cartService.cart_total_price(mbsp_id));
 		
 		MemberDTO memberDTO = memberService.modify(mbsp_id);
 		model.addAttribute("memberDTO", memberDTO);
@@ -77,6 +79,8 @@ public class OrderController {
 	@PostMapping("/order_save")
 	public String order_save(OrderDTO dto, String p_method, String account_transfer, String sender, HttpSession session, RedirectAttributes rttr) throws Exception {
 		String mbsp_id = ((MemberDTO) session.getAttribute("login_auth")).getMbsp_id();
+		dto.setMbsp_id(mbsp_id);
+
 		
 		orderService.order_process(dto, p_method, account_transfer, sender);
 		
@@ -99,9 +103,6 @@ public class OrderController {
 		 });
 
 		 EmailDTO dto = new EmailDTO("CoreflowShop", "CoreflowShop", ord_mail, "주문내역", "주문내역");
-		 
-		 		 
-		 //emailService.sendMail("mail/orderConfirmation", dto, order_result, order_total_price);
 		 emailService.sendMail("mail/orderConfirmation", dto, order_result, order_total_price);
 		 
 		 model.addAttribute("order_total_price", order_total_price);

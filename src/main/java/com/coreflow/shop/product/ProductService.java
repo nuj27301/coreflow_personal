@@ -16,11 +16,15 @@ public class ProductService {
 	
 	private final ProductMapper productMapper;
 	
-	List<ProductDTO> getProductList(SearchCriteria cri, Integer cate_code) {
+	public List<ProductDTO> getProductList(SearchCriteria cri, Integer cate_code) {
 		return productMapper.getProductList(cri, cate_code);
 	}
 	
-	int getProductListCount(Integer cate_code) {
+	public int getProductListCount(Integer cate_code) {
 		return productMapper.getProductListCount(cate_code);
+	}
+	
+	public List<ProductDTO> getRecommendList() {
+		return productMapper.getRecommendList();
 	}
 }
