@@ -51,6 +51,7 @@ public class ProductController {
 				
 	}
 	
+	// 주문상품이미지 보여주기
 	@GetMapping("/image_display")
 	public ResponseEntity<byte[]> image_display(String dateFolderName, String fileName) throws Exception {
 		

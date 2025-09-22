@@ -21,6 +21,9 @@ import com.coreflow.shop.common.utils.FileUtils;
 
 import com.coreflow.shop.mail.EmailService;
 import com.coreflow.shop.member.MemberService;
+
+import jakarta.servlet.http.HttpSession;
+
 import com.coreflow.shop.common.dto.EmailDTO;
 import com.coreflow.shop.common.dto.MemberDTO;
 
@@ -43,9 +46,9 @@ public class OrderController {
 	
 	// 주문정보페이지
 	@GetMapping("/order_info")
-	public void order_info(CartDTO dto, String type, Model model) throws Exception {
-		dto.setMbsp_id("user01");
-		String mbsp_id = dto.getMbsp_id();
+	public void order_info(CartDTO dto, String type, HttpSession session, Model model) throws Exception {
+		String mbsp_id = ((MemberDTO) session.getAttribute("login_auth")).getMbsp_id();
+		dto.setMbsp_id(mbsp_id);
 		
 		if(type.equals("buy")) cartService.cart_add(dto);
 		
@@ -62,7 +65,7 @@ public class OrderController {
 		model.addAttribute("item_name", item_name);
 		model.addAttribute("quantity", orderDetails.size());
 		
-		model.addAttribute("order_total_price", cartService.cart_total_price(dto.getMbsp_id()));
+		model.addAttribute("order_total_price", cartService.cart_total_price(mbsp_id));
 		
 		MemberDTO memberDTO = memberService.modify(mbsp_id);
 		model.addAttribute("memberDTO", memberDTO);
@@ -73,8 +76,9 @@ public class OrderController {
 	
 	// 주문정보저장
 	@PostMapping("/order_save")
-	public String order_save(OrderDTO dto, String p_method, String account_transfer, String sender, RedirectAttributes rttr) throws Exception {
-		dto.setMbsp_id("user01");
+	public String order_save(OrderDTO dto, String p_method, String account_transfer, String sender, HttpSession session, RedirectAttributes rttr) throws Exception {
+		String mbsp_id = ((MemberDTO) session.getAttribute("login_auth")).getMbsp_id();
+		dto.setMbsp_id(mbsp_id);
 		
 		orderService.order_process(dto, p_method, account_transfer, sender);
 		
@@ -97,9 +101,6 @@ public class OrderController {
 		 });
 
 		 EmailDTO dto = new EmailDTO("CoreflowShop", "CoreflowShop", ord_mail, "주문내역", "주문내역");
-		 
-		 		 
-		 //emailService.sendMail("mail/orderConfirmation", dto, order_result, order_total_price);
 		 emailService.sendMail("mail/orderConfirmation", dto, order_result, order_total_price);
 		 
 		 model.addAttribute("order_total_price", order_total_price);
