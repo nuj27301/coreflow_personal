@@ -80,6 +80,9 @@ public class OrderController {
 	public String order_save(OrderDTO dto, String p_method, String account_transfer, String sender, HttpSession session, RedirectAttributes rttr) throws Exception {
 		String mbsp_id = ((MemberDTO) session.getAttribute("login_auth")).getMbsp_id();
 		dto.setMbsp_id(mbsp_id);
+		
+		
+		log.info("메일주소: " + dto.getOrd_mail());
 
 		
 		orderService.order_process(dto, p_method, account_transfer, sender);

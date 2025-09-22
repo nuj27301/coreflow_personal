@@ -185,7 +185,7 @@
             <div class="row mb-3">
               <label class="col-sm-2 col-form-label">이메일주소</label>
               <div class="col-sm-4">
-                <input type="text" class="form-control" id="ord_mail_1" th:value="${memberDTO.mbsp_email}">
+                <input type="text" class="form-control" id="ord_mail_1" name="ord_mail" th:value="${memberDTO.mbsp_email}">
               </div>
             </div>
           </div>
@@ -230,6 +230,7 @@
               <label class="col-sm-2 col-form-label">상세주소</label>
               <div class="col-sm-4">
                 <input type="text" class="form-control" id="sample2_detailAddress" name="ord_addr_detail" th:value="${memberDTO.mbsp_addressdetail}">
+                <input type="hidden" id="sample2_extraAddress" placeholder="참고항목">
               </div>
             </div>
           </div>
@@ -388,7 +389,7 @@
 	              item_name : '[[${item_name}]]', quantity : [[${quantity}]], ord_price: [[${order_total_price}]],
 	              ord_name : $("#ord_name_2").val(), ord_addr_zipcode: $("#sample2_postcode").val(), 
 	              ord_addr_basic : $("#sample2_address").val(), ord_addr_detail : $("#sample2_detailAddress").val(),
-	              ord_tel : $("#ord_tel_2").val(), ord_mail : $("#ord_mail_2").val()
+	              ord_tel : $("#ord_tel_2").val(), ord_mail : $("#ord_mail_1").val()
 	            },
 	            success: function(response) {
 	              location.href = response.next_redirect_pc_url;
