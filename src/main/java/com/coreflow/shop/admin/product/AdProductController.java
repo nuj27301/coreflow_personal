@@ -19,6 +19,7 @@ import com.coreflow.shop.common.utils.FileUtils;
 import com.coreflow.shop.common.utils.PageMaker;
 import com.coreflow.shop.common.utils.SearchCriteria;
 
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -26,8 +27,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.lang.ProcessBuilder.Redirect;
+import java.time.Period;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -185,23 +187,37 @@ public class AdProductController {
 	}
    
 	@GetMapping("/pro_list") 
-	public String pro_list(SearchCriteria cri,Model model) throws Exception {
+	public String pro_list(@ModelAttribute("cri") SearchCriteria cri,
+			@ModelAttribute("cate_code") String cate_code,
+			@ModelAttribute("start_date") String start_date,
+			@ModelAttribute("end_date") String end_date,
+			@ModelAttribute("period") String period,
+			Model model) throws Exception {
+		
+				
 		
 		cri.setPerPageNum(Constants.ADMIN_PRODUCT_LIST_COUNT); 
 		
+//		log.info("period={}, start={}, end={}, cate={}", period, start_date, end_date, cate_code);
+
 		//1.상품 목록 
-		List<ProductDTO> pro_list = adProductService.pro_list(cri);
+		List<Map<String, Object>> productList = adProductService.pro_list(
+	            cri, period, start_date, end_date, cate_code);
 		
-		model.addAttribute("pro_list", pro_list); 
 		
+		
+		
+
+	    model.addAttribute("pro_list", productList);
 		//페이징 정보
 		
+		int totalcount =adProductService.getTotalcount(
+				cri,period,start_date,end_date,cate_code
+				);
+		
 		PageMaker pageMaker = new PageMaker(); 
-		
-		pageMaker.setDisplayPageNum(Constants.ADMIN_PRODUCT_LIST_PAGESIZE);
-		
 		pageMaker.setCri(cri); 
-		pageMaker.setTotalCount(adProductService.getTotalCount(cri)); // 전체 상품수 
+		pageMaker.setTotalCount(totalcount); // 전체 상품수 
 		
 		model.addAttribute("pageMaker",pageMaker); 
 		
@@ -209,14 +225,14 @@ public class AdProductController {
 		
 		model.addAttribute("cate_list", adCategoryService.getFirstList());
 		
-		return "/admin/products/ad_pro_list";
+		return "admin/products/ad_pro_list";
 	}
  
   //상품수정 
 	@GetMapping("/pro_edit") 
 	public void pro_edit(@ModelAttribute("cri") SearchCriteria cri, Integer pro_num,Model model) throws Exception {
 		
-		// 1차카테고리들
+		// 1차카테고리들pro_edit_modify
 		model.addAttribute("cate_list",adCategoryService.getFirstList());
 		
 		//상품수정
@@ -286,7 +302,7 @@ public class AdProductController {
 		
 		//원래자리로 주소이동 
 		rttr.addAttribute("page",cri.getPage());
-		rttr.addAttribute("perpageNum",cri.getPerPageNum());
+		rttr.addAttribute("perPageNum",cri.getPerPageNum());
 		rttr.addAttribute("searchType",cri.getSearchType());
 		rttr.addAttribute("keyword",cri.getKeyword()); 
 		
@@ -308,6 +324,36 @@ public class AdProductController {
 		return entity;
 	}  
 	
-	
-    
+	/*선택상품삭제2(form태그)*/
+	@PostMapping("/pro_sel_delete_2") 
+	public String pro_sel_delete_form(
+			int[] check,
+			String[] pro_up_folder,
+			String[] pro_img 
+			) throws Exception{
+		//배열 방식으로 선택한 상품을 DB 에서 삭제 (실제 삭제는 서비스 + 매퍼 담당)
+	   adProductService.pro_sel_delete_2(check); 
+	    
+	   /*선택한 상품 DB삭제가 예외 없이 끝난후 for문으로 고아파일 삭제*/
+	   for (int i = 0; i < check.length; i++ ) {
+		   
+		 FileUtils.delete(uploadPath, pro_up_folder[i], pro_img[i], "image");
+		   
+	   }
+	  
+	   //중복제출방지 실행되지 않게 리다이렉트
+	   return "redirect:/admin/products/pro_list";
+	} 
+			
+    //선택상품삭제(폼에서 이름+추가 정보를 DB로직에서 사용)
+	@PostMapping("/pro_sel_delete_add_info") 
+	public String pro_sel_delete_add_info(int[] check,String pro_name) throws Exception {
+		
+		//1. 주입 받은 SERVICE에 hashmap으로 삭제요청데이터를 전달하여 DB에서 삭제 
+		adProductService.pro_sel_delete_add_info(check, pro_name);//HashMap
+		
+		
+		
+		return "redirect:/adimin/products/pro_list";
+	}
 }
