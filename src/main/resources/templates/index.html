@@ -213,15 +213,42 @@
             </th:block>
 
         </div>
-
-        <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">이전</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">다음</span>
-        </button>
     </div>
 
 </th:block>
+
+<th:block layout:fragment="script2">
+<script th:inline="javascript">
+  $(document).ready(function() {
+
+    $("button[name='btn_cart_add']").on("click", function() {
+      let pro_num = $(this).data("pro_num");
+      let cart_amount = $(this).parents("div.card").find("input[name='quantity']").val();
+
+      $.ajax({
+        url: '/cart/cart_add',
+        type: 'post',
+        data: {pro_num: pro_num, cart_amount: cart_amount},
+        dataType: 'text',
+        success: function(data) {
+          if(data == "success") {
+            alert("장바구니에 등록되었습니다");
+            if(confirm("장바구니로 이동하겠습니까?")) {
+              location.href = "/cart/cart_list";
+            }
+          }
+        }
+      });
+    });
+
+    $("button[name='btn_direct_buy']").on("click", function() {
+      let pro_num = $(this).data("pro_num");
+      let buy_amount = $(this).parents("div.card").find("input[type='number'][name='quantity']").val();
+      location.href = `/order/order_info?pro_num=${pro_num}&cart_amount=${buy_amount}&type=buy`;
+    });
+
+  });
+</script>
+</th:block>
+
+</html>

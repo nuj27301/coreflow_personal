@@ -186,82 +186,82 @@
 
 <th:block layout:fragment="script2">
 
- <script th:inline="javascript">
+ <script th:inline="javascript">
 
-  $(document).ready(function() {
-    // 장바구니 비우기
-    $("#btn_cart_empty").on("click", function() {
-      if(confirm("장바구니를 비우겠습니까?")) {
-        location.href = "/cart/cart_empty";
-      }
-    });
+  $(document).ready(function() {
+    // 장바구니 비우기
+    $("#btn_cart_empty").on("click", function() {
+      if(confirm("장바구니를 비우겠습니까?")) {
+        location.href = "/cart/cart_empty";
+      }
+    });
 
-  $("#checkAll").on("click", function() {
-    $("input[name='check']").prop("checked", this.checked);
-    });
+  $("#checkAll").on("click", function() {
+    $("input[name='check']").prop("checked", this.checked);
+    });
 
-  $("input[name='check']").on("click", function() {
-    $("#checkAll").prop("checked", true)
+  $("input[name='check']").on("click", function() {
+    $("#checkAll").prop("checked", true)
 
-    $("input[name='check']").each(function() {
-      if(!$(this).is(":checked")) {
-        $("#checkAll").prop("checked", false);
-      }
-    });
-   });
+    $("input[name='check']").each(function() {
+      if(!$(this).is(":checked")) {
+        $("#checkAll").prop("checked", false);
+      }
+    });
+  });
 
-   // 선택삭제
-  $("#btn_sel_delete").on("click", function() {
-    if(confirm("선택된 상품을 삭제하시겠습니까?")) {
-      $("#cartForm").submit();
-    }
-  });
+   // 선택삭제
+  $("#btn_sel_delete").on("click", function() {
+    if(confirm("선택된 상품을 삭제하시겠습니까?")) {
+      $("#cartForm").submit();
+    }
+  });
 
-  // 수량변경
-  $("button[name='btn_quantity_change']").on("click", function() {
-    
-    let cur_tr = $(this).parent().parent();
-    let tfoot_first_tr = $("table tfoot tr:first");
-    
-    let pro_num = $(this).data("pro_num");
-    let cart_amount = $(this).parent().find("input[name='btn_cart_amount']").val();
-    
-    $.ajax({
-        url: "/cart/cart_quantity_change_2",
-        type: "post",
-        data: {pro_num: pro_num, cart_amount: cart_amount},
-        success: function(result) {
-          if(result == "success") {
+  // 수량변경
+  $("button[name='btn_quantity_change']").on("click", function() {
+  
+    let cur_tr = $(this).closest("tr"); 
+    let tfoot_first_tr = $("table tfoot tr:first");
+  
+    let pro_num = $(this).data("pro_num");
+    let cart_amount = $(this).parent().find("input[name='btn_cart_amount']").val();
 
-            // 가격 * 수량
-            let unitprice = cur_tr.find("td.price").data("price") * cart_amount ; 
-                cur_tr.find("td.unitprice")
-                .data("unitprice", unitprice)
-                .html(unitprice + " 원");
+    $.ajax({
+        url: "/cart/cart_quantity_change_2",
+        type: "post",
+        data: {pro_num: pro_num, cart_amount: cart_amount},
+        success: function(result) {
+          if(result == "success") {
 
-            let total_price = 0;
-            $("td.unitprice").each(function() {
-              total_price += parseInt($(this).data("unitprice"));
-            })
+           // 가격 * 수량
+           let unitprice = cur_tr.find("td.price").data("price") * cart_amount ; 
+               cur_tr.find("td.unitprice")
+               .data("unitprice", unitprice)
+               .html(unitprice + " 원");
 
-            console.log("총금액", total_price);
+           let total_price = 0;
+           $("td.unitprice").each(function() {
+             total_price += parseInt($(this).data("unitprice"));
+           })
 
-            tfoot_first_tr.find("td.cart_total_price").html("총금액 : " + total_price + " 원");
-          }}
-        });
-   });
+            console.log("총금액", total_price);
 
-   // 주문하기
-   $("#btn_order_info").on("click",function() {
-    location.href = "/order/order_info?type=cart";
-   });
+            tfoot_first_tr.find("div.cart_total_box").html("총금액 : " + total_price + " 원");
+          }}
+        });
+   });
+
+   // 주문하기
+   $("#btn_order_info").on("click",function() {
+    location.href = "/order/order_info?type=cart";
+   });
 
     // 계속 쇼핑하기
-   $("#btn_shopping").on("click", function() {
-    location.href = "/";
-   });
-   
-  });
+   $("#btn_shopping").on("click", function() {
+    location.href = "/";
+   });
+   
+  });
 </script>
 
 </th:block>
