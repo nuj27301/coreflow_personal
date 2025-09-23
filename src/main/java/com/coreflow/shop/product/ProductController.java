@@ -57,5 +57,13 @@ public class ProductController {
 		
 		return FileUtils.getFile(uploadPath + File.separator + dateFolderName, fileName);
 	}
+	
+	// 상품 상세페이지
+		@GetMapping("/pro_detail")
+		public void pro_detail(Integer pro_num, @ModelAttribute("cate_name") String cate_name, Model model) throws Exception {
+
+			model.addAttribute("productDTO", productService.pro_detail(pro_num));
+		}
+	
 
 }

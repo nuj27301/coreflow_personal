@@ -14,4 +14,6 @@ public interface ProductMapper {
 	int getProductListCount(Integer cate_code);
 	
 	List<ProductDTO> getRecommendList();
+	
+	ProductDTO pro_detail(Integer pro_num);
 }

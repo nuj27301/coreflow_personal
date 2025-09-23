@@ -27,4 +27,8 @@ public class ProductService {
 	public List<ProductDTO> getRecommendList() {
 		return productMapper.getRecommendList();
 	}
+	
+	public 	ProductDTO pro_detail(Integer pro_num) {
+		return productMapper.pro_detail(pro_num);
+	}
 }
