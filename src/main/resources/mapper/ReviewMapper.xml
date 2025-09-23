@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coreflow.shop.review.ReviewMapper">
+
+<select id="rev_list" resultType="com.coreflow.shop.common.dto.ReviewDTO" parameterType="map">
+
+	select 
+		rev_code,
+		mbsp_id,
+		pro_num,
+		rev_content,
+		rev_rate,
+		rev_date
+		from review
+	where 
+		pro_num = #{pro_num}
+	order by 
+		rev_date desc
+	limit 
+		#{cri.pageStart}, #{cri.perPageNum}
+		
+</select>
+
+
+<select id="getReviewCountByPro_num" resultType="int" parameterType="Integer"> 
+
+	select 
+		count(*)
+	from 
+		review
+	where 
+		pro_num = #{pro_num};
+
+</select>
+
+
+</mapper>

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+
+
+  <th:block layout:fragment="css">
+    <style>
+      p#star_rev_rate a.rev_rate {
+        font: size 22px;
+        text-decoration: none;
+        color: lightgray;
+      }
+
+      /*별점에 클릭했을 경우 선택지*/
+      p#star_rev_rate a.rev_rate.on {
+        color: palevioletred;
+
+      }
+
+    </style>
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+
+</th:block>
+
+	
+	<th:block layout:fragment="script1">
+		<script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+    <script id="templateReview" type="text/x-handlebars-template">
+       <table class="table" id="reviewTable">
+      <tbody>
+        {{#each .}}
+        <tr>
+        <td>{{rev_code}}</td>
+        <td>{{auth_view mbsp_id}}</td>
+        <td>{{rev_content}}</td>
+        <td>{{displayStar rev_rate}}</td>
+        <td>{{convertDate rev_date}}</td>
+        <td>
+          {{authControlView mbsp_id rev_code}}        
+        </td>
+        </tr>
+        {{/each}}
+      </tbody>
+      </table>
+
+    </script>
+      <script th:inline="javascript">
+        // 핸들바 사용자정의 함수
+        Handlebars.registerHelper("convertDate", function(reviewData) {
+          const date = new Date(reviewData);
+
+          let year = date.getFullYear();
+          let month = (date.getMonth() + 1) < 10 ? "0" + date.getMonth() + 1 : date.getMonth() + 1 ;
+          let day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+          let hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+          let minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+          let second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+          return year + "/" + month + "/" + day + " " + hour + ":" + minute + ":" + second;
+        });
+
+        Handlebars.registerHelper("displayStar", function(rating) {
+          rating = parseInt(rating, 10)     // 혹시 문자열로 들어올 수 있으니 숫자로 변환
+          const maxStars = 5;
+          const fullStar = "★";
+          const emptyStar = "☆";
+
+          // '★' 반목 + '☆' 반복
+          return fullStar.repeat(rating) + emptyStar.repeat(maxStars - rating);
+        });
+
+        Handlebars.registerHelper("authControlView", function(mbsp_id, rev_code) {
+          let memberDTO = [[${session.login_auth}]];
+
+          let loginId = "";
+
+          if(memberDTO !== null) {
+            loginId = [[${session.login_auth.mbsp_id}]];
+          }
+
+          let str = "";
+          if(memberDTO !== null && loginId == mbsp_id) {
+            str += `<button type="button" class="btn btn-outline-danger" data-rev_code="${rev_code}">delete</button>`; // delete 버튼
+            str += `<button type="button" class="btn btn-outline-primary" data-rev_code="${rev_code}">edit</button>`; // edit버튼
+
+            return new Handlebars.SafeString(str) // 태그문자열을 리턴할 때 사용하는 메서드
+          }else{
+            return str;
+          }
+
+        });
+
+        Handlebars.registerHelper("auth_view", function(mbsp_id) {
+          return mbsp_id.substring(0,3) + "*".repeat(5);
+        });
+        
+      </script>
+
+
+		<script>
+			$(document).ready(function() {
+				$("#tabs").tabs();
+			});
+		
+		</script>
+
+	</th:block>
+	
+
+		
+	<th:block layout:fragment="content">
+	 <div class="row">
+    <div class="col text-center mb-3 mt-3">
+      <h3 th:utext="${cate_name}"></h3>
+    </div>
+  </div>
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">        
+    <div class="col-6">
+      <img style="width: 100%;height: 280px;" th:src="${'/product/image_display?dateFolderName=' + productDTO.pro_up_folder + '&fileName=' + productDTO.pro_img}">
+    </div>
+    <div class="col-6">
+      <h5 th:text="${productDTO.pro_name}"></h5>
+      <div class="mt-3">할인율 <span th:text="${productDTO.pro_discount}"></span></div>
+      <div class="mt-3">판매가격 <span>[[${#numbers.formatInteger(productDTO.pro_price, 3, 'COMMA') + '원'}]]</span></div>
+      <div class="mt-3">제조사 <span th:text="${productDTO.pro_publisher}"></span></div>
+      <div class="mt-3">수량 <input type="number" value="1" id="cart_amount"></div>
+      <div class="d-flex justify-content-between align-items-center mt-5">
+        <div class="btn-group">
+          <button type="button" class="btn btn-outline-primary" id="btn_cart_add">Cart</button> 
+          <button type="button" class="btn btn-outline-primary" id="btn_buy_add">Buy</button>
+        </div>
+        <small class="text-body-secondary">상품후기 :   <span id="review_count" th:text="${productDTO.pro_review}"></span></small>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div id="tabs">
+      <ul>
+        <li><a href="#tabs-1">상세정보</a></li>
+        <li><a href="#tabs-2">리뷰</a></li>
+        <li><a href="#tabs-3">QnA</a></li>
+      </ul>
+      <div id="tabs-1">
+        <p>상세내용</p>
+        <p th:utext="${productDTO.pro_summary}"></p>
+      </div>
+      <div id="tabs-2">
+        <div class="row mt-3 mb-3">
+          <div class="col-10">
+            <textarea class="form-control" id="rev_content" rows="3"></textarea>
+          </div>
+          <div class="col-2">
+            <p id="star_rev_rate">
+              <a class="rev_rate" href="#">☆</a>
+              <a class="rev_rate" href="#">☆</a>
+              <a class="rev_rate" href="#">☆</a>
+              <a class="rev_rate" href="#">☆</a>
+              <a class="rev_rate" href="#">☆</a>
+              (별평점)
+            </p>
+            <button type="button" class="btn btn-primary mb-2" id="btn_rev_save" th:data-pro_num="${productDTO.pro_num}">후기 작성하기</button>
+          </div>
+        </div>
+        <div class="row">
+          <!-- 상품후기목록이 출력되는 위치 -->
+          <div class="col" id="reviewList"></div>
+        </div>
+        <div class="row">
+          <!-- 상품 페이지 출력되는 위치 [prev] 1 2 3 4 5 [next]-->
+          <div class="col" id="reviewPaging"></div>
+        </div>
+      </div>
+      <div id="tabs-3">
+        <p>QnA</p>
+      </div>
+    </div>
+  </div>
+	</th:block>
+	
+	
+	<th:block layout:fragment="script2">
+	<script>
+	 $(document).ready(function() {
+		 
+		 // 장바구니버튼 클릭 id="btn_cart_add"
+		 $("button#btn_cart_add").on("click", function() {
+			 $.ajax({
+				 url: '/cart/cart_add',
+				 type: 'post',
+				 data: {pro_num: [[${productDTO.pro_num}]], cart_amount : $("#cart_amount").val()},
+				 dataType: 'text',
+				 success: function(result) {
+					 alert("장바구니에 등록됨");
+					 if(confirm("장바구니로 이동하겠습니까?")) {
+						 location.href = "/cart/cart_list";
+					 }
+				 }
+			 });
+		 });
+		 
+		 
+		 // 구매하기버튼 클릭 id="btn_buy_add"
+		 $("button#btn_buy_add").on("click", function() {
+			 let cart_amount = $("#cart_amount").val();
+			 
+       // 주문하기 주소에서 구매상품을 장바구니에 추가작업 진행. 
+			 let url = `/order/order_info?pro_num=[[${productDTO.pro_num}]]&cart_amount=${cart_amount}&type=buy`;
+			 
+			 location.href = url;
+		 });
+		 
+		 // 상품후기 관련작업코드
+		 let pro_num = [[${productDTO.pro_num}]]; // 상품후기에 해당하는 상품코드
+		 let reviewPaging = 1; // 상품후기목록을 1번째 페이지. 
+		 let url = "/review/rev_list/" + pro_num + "/" + reviewPaging; // 상품후기목록 (페이징포함) 요청주소
+		
+		 getPage(url);
+		 
+		 function getPage(Url) {
+			 $.getJSON(url, function(data) {
+				//  console.log("상품후기목록 및 페이징 ", data.rev_list);
+				//  console.log("상품후기목록 및 페이징 ", data.pageMaker);
+				 
+         // 상품후기 출력함수 
+         fn_displayReViewData(data.rev_list, $("div#reviewList"), $("#templateReview"));
+        //  // 페이징 출력함수
+        //  fn_displayReViewPaging(data.pageMaker, $("div#reviewPaging"));
+			 });
+		 }
+
+     // 댓글목록 출력함수 : 핸들바 템플릿 사용. 
+     // replayData : json포맷의 댓글목록데이타
+     // target : 댓글목록 데이타가 출력될 위치
+     // template : 핸들바 템플릿 
+     function fn_displayReViewData(reviewList, target, template) {
+        let templateObj = Handlebars.compile(template.html()); // 댓글 핸들파 템플릿 내용을 문법검사
+        let reviewHtml = templateObj(reviewList); // 데이타 + 핸들바 템플릿 결합된 결과의 html코드
+
+        target.empty(); // 기존 댓글목록 제거
+        target.append(reviewHtml); // 댓글목록이 출력됨
+     }
+
+     // 페이징 작업함수
+
+     // 별을 클릭시 css효과작업
+          $("p#star_rev_rate a.rev_rate").on("click", function(e) {
+            e.preventDefault();
+            $(this).parent().children().removeClass("on"); // 기존 on 선택자를 별 (a태그)에서 제거
+            $(this).addClass("on").prevAll("a").addClass("on"); // 현재 선택한 별(a태그)에서 on 선택지 추가하고, 이젠 별(a 태그) on 선택자 추가
+          });
+  
+		 
+		 // 상품후기. id="btn_rev_save"
+		 $("button#btn_rev_save").on("click", function() {
+        let pro_num = $(this).data("pro_num");
+        let rev_content = $("rev_content").val();
+
+        let rev_rate = 0; // 별 (a태그)에 css 클래스선택지가 on이 몇 개 적용되어 있는지? 
+
+        // 별 (a태그) 가 5번 반복 
+        $("p#star_rev_rate a.rev_rate").each(function() {
+          if($(this).attr("class") == "rev_rate on") {
+            rev_rate += 1;
+          }
+        });
+
+        if(rev_rate == 0) {
+          alret("별 평점을 클릭하세요");
+          return;
+        }
+
+        let review_date = {pro_num : pro_num, rev_content : rev_content, rev_rate : rev_rate};
+
+        $.ajax({
+            url: '/review/review_save',
+            type: 'post',
+            headers: {
+              "Content_type" : "application/json",  "X-HTTP-Method-Override" : "POST"
+            },
+            data: JSON.stringify(review_date),
+            dataType: 'text',
+            success: function(data) {
+              if(data > 0) {
+                alret("상품후기 등록됨");
+
+                reviewPage = 1;
+                getPage(Url);
+              }
+            }
+
+        });
+		 });
+		 
+	 });  // ready event end
+	
+	</script>
+	</th:block>
+	
+</html>
