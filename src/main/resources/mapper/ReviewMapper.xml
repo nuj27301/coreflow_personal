@@ -2,24 +2,46 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coreflow.shop.review.ReviewMapper">
 
-<select id="rev_list" resultType="com.coreflow.shop.common.dto.ReviewDTO" parameterType="map">
+<select id="rev_list" resultMap="ReviewResultMap">
 
 	select 
-		rev_code,
-		mbsp_id,
-		pro_num,
-		rev_content,
-		rev_rate,
-		rev_date
-		from review
+		r.rev_code, r.mbsp_id, r.pro_num, r.rev_content, r.rev_rate, r.rev_date,
+		rr.rev_code, rr.manager_id, rr.reply_id, rr.reply_text, rr.reply_date 
+	from 
+		review r 
+	left outer join 
+		review_replies rr 
+	on 
+		r.rev_code = rr.rev_code
 	where 
 		pro_num = #{pro_num}
-	order by 
-		rev_date desc
+       order by 
+		r.rev_date desc, rr.reply_date asc
 	limit 
 		#{cri.pageStart}, #{cri.perPageNum}
 		
 </select>
+
+
+<resultMap id="ReviewResultMap" type="com.coreflow.shop.common.dto.ReviewDTO">
+        <id property="rev_code" column="rev_code"/> <!-- pk -->
+        <result property="mbsp_id" column="mbsp_id"/>
+        <result property="pro_num" column="pro_num"/>
+        <result property="rev_content" column="rev_content"/>
+        <result property="rev_rate" column="rev_rate"/>
+        <result property="rev_date" column="rev_date"/>
+        <collection property="replies" ofType="com.coreflow.shop.common.dto.ReviewReplyDTO">
+            <id property="reply_id" column="reply_id"/>  <!--  pk -->
+            
+            <!--  fk 중복작업하면 안된다. -->
+            <!--  <result property="rev_code" column="rev_code"/>  -->
+            
+            <result property="manager_id" column="manager_id"/>
+            <result property="reply_text" column="reply_text"/>
+            <result property="reply_date" column="reply_date"/>
+        </collection>
+    </resultMap>
+
 
 
 <select id="getReviewCountByPro_num" resultType="int" parameterType="Integer"> 
@@ -29,9 +51,59 @@
 	from 
 		review
 	where 
-		pro_num = #{pro_num};
+		pro_num = #{pro_num}
 
 </select>
+
+<insert id="review_save" parameterType="com.coreflow.shop.common.dto.ReviewDTO">
+	
+	insert into
+		review(mbsp_id, pro_num, rev_content, rev_rate)
+	values
+		(#{mbsp_id}, #{pro_num}, #{rev_content}, #{rev_rate})
+
+
+</insert>
+
+<delete id="review_delete" parameterType="Integer">
+
+
+	delete from
+		review
+	where
+		rev_code = #{rev_code}
+
+</delete>
+
+<select id="review_info" resultType="com.coreflow.shop.common.dto.ReviewDTO" parameterType="Integer">
+
+	select
+		rev_code,
+		mbsp_id,
+		pro_num,
+		rev_content,
+		rev_rate,
+		rev_date
+	from
+		review
+	where
+		rev_code = #{rev_code}
+
+</select>
+
+<update id="review_modify" parameterType="com.coreflow.shop.common.dto.ReviewDTO">
+
+	update
+		review
+	set
+		rev_content = #{rev_content},
+		rev_rate = #{rev_rate},
+		rev_date = now()
+	where
+		rev_code = #{rev_code}
+
+</update>
+
 
 
 </mapper>

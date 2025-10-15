@@ -15,6 +15,18 @@ public interface ReviewMapper {
 	
 	// 상품후기개수
 	int getReviewCountByPro_num(Integer pro_num);
+	
+	// 상품후기 저장
+	void review_save(ReviewDTO dto);
+	
+	// 상품후기 삭제
+	void review_delete(Integer rev_code);
+	
+	// 상품후기
+	ReviewDTO review_info(Integer rev_code);
+	
+	// 상품후기 수정
+	void review_modify(ReviewDTO dto);
 
 }
 

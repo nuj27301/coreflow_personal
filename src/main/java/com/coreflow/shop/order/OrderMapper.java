@@ -13,4 +13,7 @@ public interface OrderMapper {
 	void order_item_insert(@Param("ord_code") Integer ord_code,@Param("mbsp_id") String mbsp_id);
 	
 	List<Map<String, Object>> order_result(Integer ord_code);
+	
+	List<Map<String, Object>> myorder_manage(String mbsp_id);
+
 }
