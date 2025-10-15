@@ -33,5 +33,4 @@ public class ReviewDTO {
 	// left outer join
 	// mybatis의 collection문법사용
 	private List<ReviewReplyDTO> replies;
-	
 }

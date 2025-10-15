@@ -80,4 +80,21 @@
 			
 	</select>
 	
+	<select id="myorder_manage" resultType="com.coreflow.shop.common.dto.OrderDTO">	
+		
+		select
+			ord_code,
+			ord_name,
+			ord_price,
+			ord_status,
+			ord_regdate
+		from
+			orders
+		where
+			mbsp_id = #{mbsp_id}
+		
+	</select>
+	
+	
+	
 </mapper>
