@@ -3,6 +3,8 @@ package com.coreflow.shop.common.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -18,6 +20,7 @@ public class ReviewDTO {
 	private Integer pro_num;
 	private String rev_content;
 	private int rev_rate;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd HH:mm:ss", timezone = "Asia/Seoul")
 	private LocalDateTime rev_date;
 	
 	// 상품
@@ -29,8 +32,6 @@ public class ReviewDTO {
 	// review 테이블과 review_replies테이블 (1:N관계)
 	// left outer join
 	// mybatis의 collection문법사용
-	// private List<ReviewReply> replies; // 추가
-	
-	
+	private List<ReviewReplyDTO> replies;
 	
 }

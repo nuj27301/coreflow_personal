@@ -2,14 +2,20 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout}">
+      
+<th:block layout:fragment="css">
 
-<head>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+      
   <style>
     body {
       background-color: #f8f9fa;
       font-family: 'Segoe UI', sans-serif;
-      padding: 30px 0;
+      padding: 0;
     }
+    .row.content-wrapper {
+	  margin-top: 30px; /* 페이지 제목, 카드 등만 아래로 */
+	}
 
     /* 페이지 제목 */
     h3 {
@@ -55,15 +61,17 @@
       font-weight: 600;
     }
 
-    /* 재고 배지 색상 통일 */
-    .badge.bg-success {
-      background-color: #000 !important; /* 재고 있음 → 검정색 */
-      color: #fff !important;
-    }
-    .badge.bg-danger {
-      background-color: #dc3545 !important; /* 품절 → 붉은색 */
-      color: #fff !important;
-    }
+	/* 재고 있음 */
+	.badge.bg-success {
+	  background-color: #D8BFAF !important;
+	  color: #5C4033 !important;
+	}
+	
+	/* 품절 */
+	.badge.bg-danger {
+	  background-color: #e74c3c !important; /* 연한 빨강 */
+	  color: #fff !important;
+	}
 
     input[type="number"] {
       border-radius: 12px;
@@ -120,7 +128,8 @@
       border: 1px solid #000;
     }
   </style>
-</head>
+  
+</th:block>
 
 <th:block layout:fragment="content">
   <div class="row">
@@ -178,14 +187,16 @@
             <form th:action="@{/cart/add}" method="post" class="flex-fill">
               <input type="hidden" name="pro_num" th:value="${productDTO.pro_num}">
               <input type="hidden" name="quantity" value="1" class="selected-qty">
-              <button type="button" name="btn_cart_add" th:data-pro_num="${productDTO.pro_num}" class="btn btn-outline-primary btn-sm w-100">🛒 장바구니</button>
+              <button type="button" name="btn_cart_add" th:data-pro_num="${productDTO.pro_num}" class="btn btn-outline-primary btn-sm w-100">
+              <i class="fa-solid fa-cart-shopping"></i> 장바구니</button>
             </form>
 
             <!-- 구매하기 -->
             <form th:action="@{/order/now}" method="post" class="flex-fill">
               <input type="hidden" name="pro_num" th:value="${productDTO.pro_num}">
               <input type="hidden" name="quantity" value="1" class="selected-qty">
-              <button type="button" name="btn_direct_buy" th:data-pro_num="${productDTO.pro_num}" class="btn btn-primary btn-sm w-100">💳 구매하기</button>
+              <button type="button" name="btn_direct_buy" th:data-pro_num="${productDTO.pro_num}" class="btn btn-primary btn-sm w-100">
+              <i class="fa-solid fa-credit-card"></i> 구매하기</button>
             </form>
           </div>
         </div>

@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coreflow.shop.admin.statistics.StatisticsMapper">
+
+	<select id="getDailyStaistics" resultType="map">
+	
+		with recursive date_list as (
+		    select date(concat(#{date}, '-01')) as the_date
+		    union all
+		    select date_add(the_date, interval 1 day)
+		    from date_list
+		    where month(date_add(the_date, interval 1 day)) = month(concat(#{date}, '-01'))
+		)
+		
+		select 
+			date_format(d.the_date, '%y-%m-%d') as date,
+			coalesce(sum(o.ord_price), 0) as total_sales
+		from
+			date_list d
+		left join
+			orders o
+		on
+			date(o.ord_regdate) = d.the_date
+		group by
+			d.the_date
+		order by
+			d.the_date asc
+		
+	</select>
+	
+	<select id="getHourlyStatistics" resultType="map">
+	
+		<![CDATA[
+			with recursive hours as (
+			    select 0 as hour
+			    union all
+			    select hour + 1
+			    from hours
+			    where hour < 23
+			)
+		
+			select
+				h.hour,
+				coalesce(sum(o.ord_price), 0) as total_sales
+			from 
+				hours h
+			left join
+				orders o
+			on
+				hour(o.ord_regdate) = h.hour
+			and
+				o.ord_regdate >= #{start_date}
+			and
+				o.ord_regdate < #{end_date}
+			group by
+				h.hour
+			order by 
+				h.hour asc
+		]]>
+		
+	</select>
+	
+	<select id="getWeeklyStatistics" resultType="map">
+		
+		<![CDATA[
+			select 
+			    w.weekday,
+			    coalesce(sum(o.ord_price), 0) as total_sales
+			from 
+			    (
+			        select 'Monday' as weekday union all
+			        select 'Tuesday' union all
+			        select 'Wednesday' union all
+			        select 'Thursday' union all
+			        select 'Friday' union all
+			        select 'Saturday' union all
+			        select 'Sunday'
+			    ) as w
+			left join 
+			    orders o
+			on 
+				dayname(o.ord_regdate) = w.weekday
+			and 
+				o.ord_regdate >= #{start_date}
+			and 
+				o.ord_regdate < #{end_date}
+			group by 
+			    w.weekday
+			order by 
+			    field(w.weekday, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday')
+		]]>
+		
+	</select>
+	
+	<select id="getMonthlyStatistics" resultType="map">
+	
+		select 
+		    m.month,
+		    coalesce(sum(o.ord_price), 0) as total_sales
+		from 
+		    (
+	        select 1 as month union all select 2 union all select 3 union all
+	        select 4 union all select 5 union all select 6 union all
+	        select 7 union all select 8 union all select 9 union all
+	        select 10 union all select 11 union all select 12
+		    ) as m
+		left join 
+		    orders o
+		on 
+			month(o.ord_regdate) = m.month
+		and 
+			year(o.ord_regdate) = #{year}
+		group by 
+		    m.month
+		order by 
+		    m.month asc
+		
+	</select>
+	
+	<select id="gettodayOrderCount" resultType="int">
+		
+		<![CDATA[
+		select 
+			count(*) as todayordercount
+		from 
+			orders
+		where 
+			ord_regdate >= curdate()
+		and 
+			ord_regdate < curdate() + interval 1 day
+		]]>
+		
+	</select>
+	
+	<select id="gettodaySalesTotal" resultType="int">
+		
+		<![CDATA[
+		select 
+			ifnull(sum(ord_price), 0) as todaysalestotal
+		from 
+			orders
+		where 
+			ord_regdate >= curdate()
+		and 
+			ord_regdate < curdate() + interval 1 day
+		and 
+			ord_status in ('입금완료', '배송중', '배송완료')
+		]]>
+		
+	</select>
+	
+	<select id="getrefundCount" resultType="int">
+	
+		<![CDATA[
+		select 
+			ifnull(count(*), 0) as refundcount
+		from 
+			orders
+		where 
+			ord_status = '환불'
+		and 
+			ord_regdate >= date_format(curdate(), '%y-%m-01')
+		and 
+			ord_regdate < date_format(curdate(), '%y-%m-01') + interval 1 month
+		]]>
+		
+	</select>
+	
+	<select id="getnewMemberCount" resultType="int">
+	
+		<![CDATA[
+		select 
+			count(*) as newmembercount
+		from 
+			members
+		where 
+			mbsp_updatedate >= curdate()
+		and 
+			mbsp_updatedate < curdate() + interval 1 day
+		]]>
+	
+	</select>
+	
+	<select id="getMonthlyCount" resultType="int">
+	
+		select
+    		count(ord_code) as current_month_orders
+		from
+    		orders
+		where
+    		year(ord_regdate) = year(now())
+    	and 
+    		month(ord_regdate) = month(now())
+	
+	</select>
+	
+	<select id="getMonthlySalesTotal" resultType="int">
+	
+		select
+    		ifnull(sum(ord_price), 0) as current_month_total_sales
+		from
+    		orders
+		where
+    		year(ord_regdate) = year(now())
+    	and 
+    		month(ord_regdate) = month(now())
+    	and 
+    		ord_status = '입금완료'
+	
+	</select>
+	
+	<select id="getTotalProductCount" resultType="int">
+	
+		select
+    		count(*) as total_products
+		from
+    		products
+		where 
+			pro_buy = 'y'
+	
+	</select>
+	
+	<select id="getSoldOutProductCount" resultType="int">
+	
+		select
+    		count(*) as total_products
+		from
+    		products
+		where 
+			pro_buy = 'n'
+	
+	</select>
+	
+	<select id="getRecentOrders" resultType="map">
+	
+	    select 
+	        o.ord_code as orderid,
+	        m.mbsp_name as customername,
+	        p.pro_name as productname,
+	        o.ord_price as totalamount,
+	        o.ord_regdate as orderdate,
+	        o.ord_status as status
+	    from 
+	        orders o
+	    inner join 
+	        members m on o.mbsp_id = m.mbsp_id
+	    inner join 
+	        order_items oi on o.ord_code = oi.ord_code
+	    inner join 
+	        products p on oi.pro_num = p.pro_num
+	    order by 
+	        o.ord_regdate desc
+	    limit 5
+	    
+	</select>
+
+	<select id="getMonthlyOrderCategoryStats" resultType="map">
+	
+		select
+		    c1.cate_name as primary_category_name,
+		    ifnull(count(oi.ord_code), 0) as total_orders    
+		from
+		    categories c1
+		left join
+		    categories c2 on c1.cate_code = c2.cate_prtcode
+		left join
+		    products p on c2.cate_code = p.cate_code
+		left join
+		    order_items oi on p.pro_num = oi.pro_num
+		left join
+		    orders o on oi.ord_code = o.ord_code
+		and 
+			year(o.ord_regdate) = year(now())
+		and 
+			month(o.ord_regdate) = month(now())
+		and 
+			o.ord_status = '입금완료'
+		where
+		    c1.cate_prtcode is null
+		group by
+		    c1.cate_name
+		order by
+		    c1.cate_name asc
+	
+	</select>
+	
+	<select id="getThisWeekOrderAmount" resultType="map">
+	
+		<![CDATA[
+			with recursive
+			    dates_in_week (date_val) as (
+			        select date_sub(curdate(), interval weekday(curdate()) day)
+			        union all
+			        select date_add(date_val, interval 1 day)
+			        from dates_in_week
+			        where date_add(date_val, interval 1 day) <= date_add(date_sub(curdate(), interval weekday(curdate()) day), interval 6 day)
+			    )
+			select
+			    t1.date_val as order_date,
+			    ifnull(sum(o.ord_price), 0) as daily_total_price
+			from
+			    dates_in_week t1
+			left join
+			    orders o 
+			on 
+				t1.date_val = date(o.ord_regdate)
+			group by
+			    t1.date_val
+			order by
+			    order_date
+		]]>
+		
+	</select>
+
+</mapper>
