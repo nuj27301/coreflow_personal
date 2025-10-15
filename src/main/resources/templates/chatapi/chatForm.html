@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<head>
+  <style>
+    body {
+      background-color: #f8f9fa;
+      color: #333;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 30px 0;
+    }
+
+    /* 제목 */
+    .fw-bold {
+      font-size: 35px;
+    }
+
+    /* 카드 */
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    .card-header {
+      background: transparent;
+      border-bottom: none;
+      padding: 0 0 16px 0;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .card-body {
+      padding: 16px;
+    }
+
+    /* 테이블 */
+    .table th, .table td {
+      vertical-align: middle;
+      padding: 18px 12px;
+      text-align: center;
+    }
+
+    .table thead th { 
+      color: #333;
+      border-bottom: 2px solid #ccc;
+      font-size: 1rem;
+    }
+
+    .price, .unitprice {
+      color: #000;
+      font-weight: 600;
+    }
+
+    /* 총금액 박스 */
+    .cart_total_box {
+      background: #e9ecef;
+      padding: 8px 16px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      display: inline-block;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    /* 버튼 */
+    .btn-primary {
+      background: #000;
+      border: none;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+    .btn-primary:hover {
+      background: #333;
+    }
+
+    .btn-outline-primary {
+      border: 2px solid #000;
+      color: #000;
+      background-color: transparent;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+    .btn-outline-primary:hover {
+      background: #000;
+      color: #fff;
+    }
+
+    /* 상품 이미지 */
+    .product-img {
+      max-width: 100px;
+      max-height: 100px;
+      border-radius: 8px;
+    }
+
+    /* 라디오 버튼 정렬 */
+    input[type="radio"] {
+      margin-right: 6px;
+    }
+    
+    
+      /* 텍스트 영역 스타일 */
+  .chat-textarea {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto 20px auto;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    font-size: 1rem;
+    resize: vertical;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  }
+
+ 	 /* 버튼 컨테이너 */
+  .chat-btn-container {
+    text-align: center;
+  }
+
+  /* 버튼 스타일 (기존 btn-primary 확장) */
+  #btn_chatbot_request {
+    background: #000;
+    color: #fff;
+    padding: 10px 24px;
+    font-weight: bold;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  #btn_chatbot_request:hover {
+    background: #333;
+  }
+    
+    
+  </style>
+</head>
+
+<th:block layout:fragment="content">
+
+  <div class="row">
+    <div class="col text-center mb-4 mt-3">
+      <h2 class="fw-bold">Q & A</h2>
+      <p class="text-muted">Customer QnA Service</p>
+    </div>
+  </div>
+
+  <!-- 주문상품 테이블 -->
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="card">
+        <div class="card-body">
+        
+        
+			<form action="/chatapi/chatForm" method="get">
+			  <div class="card-body text-center">
+			    <textarea class="chat-textarea" id="question" name="question" rows="5" placeholder="궁금한 내용을 입력해 주세요."></textarea>
+			    <div class="chat-btn-container">
+			      <button type="button" id="btn_chatbot_request">문의하기</button>
+			    </div>
+			  </div>
+			  <div id="result"></div>
+			</form>
+        
+        
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    <script>
+
+        $(document).ready(function() {
+          // id="btn_chatbot_request"
+          $("#btn_chatbot_request").on("click", function() {
+            $.ajax({
+              url: '/chatapi/chat?question='+ $("#question").val(),
+              type: 'get',
+              dataType: 'text',
+              success: function(response) {
+                $("#result").html(response);
+              }
+            });
+          });
+
+        });  // ready end evnet
+    </script>
+	</th:block>
+
+</html>

@@ -88,5 +88,28 @@
 			pro_num = #{pro_num}
 	
 	</select>
+	
+	<update id="review_count_update" parameterType="Integer">
+	
+		update
+			products
+		set 
+			pro_review = pro_review + 1
+		where
+			pro_num = #{pro_num}
+		
+	</update>
+	
+	<select id="getProductCountByPro_num" resultType="int">
+	
+		select
+			pro_review
+		from
+			products
+		where
+			pro_num = #{pro_num}
+	
+	</select>
+	
 
 </mapper>

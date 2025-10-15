@@ -66,4 +66,11 @@ public class OrderService {
 	public List<Map<String, Object>> order_result(Integer ord_code) {
 		return orderMapper.order_result(ord_code);
 	}
+	
+	public List<Map<String, Object>> myorder_manage(String mbsp_id) {
+		return orderMapper.myorder_manage(mbsp_id);
+	}
+	
+	
+	
 }

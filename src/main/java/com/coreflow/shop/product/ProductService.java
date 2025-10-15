@@ -31,4 +31,8 @@ public class ProductService {
 	public 	ProductDTO pro_detail(Integer pro_num) {
 		return productMapper.pro_detail(pro_num);
 	}
+	
+	public 	int getProductCountByPro_num(Integer pro_num) {
+		return productMapper.getProductCountByPro_num(pro_num);
+	}
 }

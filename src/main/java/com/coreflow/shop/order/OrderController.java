@@ -117,5 +117,15 @@ public class OrderController {
 		
 		return FileUtils.getFile(uploadPath + File.separator + dateFolderName, fileName);
 	}
+	
+	// MyPage 내 주문관리 
+	 @GetMapping("/myorder_manage")
+	 public void myorder_manage(HttpSession session, Model model) throws Exception {
+		  String mbsp_id = ((MemberDTO) session.getAttribute("login_auth")).getMbsp_id();
+
+		 List<Map<String, Object>> myorder_manage = orderService.myorder_manage(mbsp_id);
+		 model.addAttribute("myorder_manage", myorder_manage);
+			
+	}
 }
 	
