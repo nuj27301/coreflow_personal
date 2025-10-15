@@ -32,8 +32,5 @@ public class ReviewDTO {
 	// review 테이블과 review_replies테이블 (1:N관계)
 	// left outer join
 	// mybatis의 collection문법사용
-	private List<ReviewReplyDTO> replies; // 추가
-	
-	
-	
+	private List<ReviewReplyDTO> replies;
 }

@@ -149,11 +149,7 @@
                         [[${#numbers.formatInteger(payment_info.payment_price, 3, 'COMMA') + '원'}]]
                     </td>
                     <td>
-                        <select id="payment_status">
-                            <option  th:selected= "${payment_info.payment_status == '입금완료'}" value="입금완료">입금완료</option>
-                            <option th:selected= "${payment_info.payment_status == '입금미납'}" value="입금미납">입금미납</option>
-                        </select>
-                        <button type="button" id="btn_payment_status" th:data-payment_id="${payment_info.payment_id}">변경</button>
+                        [[${payment_info.payment_status}]]
                     </td>
                     <td>
                         [[${#dates.format(payment_info.payment_date, 'yyyy-MM-dd HH:mm:ss')}]]
@@ -267,7 +263,7 @@
 
             let pro_num = $(this).data("pro_num");
             let unit_price = $(this).data("unit_price")
-            
+
             if(!confirm("삭제하시겠습니까?")) return;
 
             $.ajax({
@@ -284,26 +280,6 @@
             });
         });
 
-
-        // 결제상태 변경
-        $("#btn_payment_status").on("click", function() {
-
-            let payment_id = $(this).data("payment_id"); // 결제번호
-            let payment_status = $("#payment_status").val(); // 결제상태(입금미납, 입금완료)
-            
-            $.ajax({
-                url: '/admin/order/payment_status',
-                data: {payment_id : payment_id, payment_status : payment_status},
-                type: "post",
-                dataType : 'text',
-                success : function(result) {
-                    if(result == "success") {
-                        alert("결제상태가 변경되었습니다.");
-                    }
-                }
-            });
-        });
-        
         
         // 관리자 메모저장. id="btn_manage_message"
         $("#btn_manage_message").on("click", function() {

@@ -7,6 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
 
     <th:block layout:fragment="css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
@@ -56,13 +58,13 @@
 
             /* 재고 배지 통일 */
             #productCarousel .badge.bg-success {
-                background-color: #000 !important;
-                color: #fff !important;
+			  background-color: #D8BFAF !important;
+			  color: #5C4033 !important;
             }
 
             #productCarousel .badge.bg-danger {
-                background-color: #dc3545 !important;
-                color: #fff !important;
+			  background-color: #e74c3c !important; /* 연한 빨강 */
+			  color: #fff !important;
             }
 
             /* 버튼 통일 */
@@ -191,7 +193,7 @@
                                             <input type="hidden" name="quantity" value="1" class="selected-qty">
                                             <button type="button" name="btn_cart_add" th:data-pro_num="${p.pro_num}"
                                                 class="btn btn-outline-dark w-100 btn-action-main d-flex align-items-center justify-content-center">
-                                                <i class="bi bi-bag-plus"></i> 장바구니
+                                               <i class="fa-solid fa-cart-shopping"></i>장바구니
                                             </button>
                                         </form>
                                         <form th:action="@{/order/now}" method="post" class="flex-fill d-flex">
@@ -199,7 +201,7 @@
                                             <input type="hidden" name="quantity" value="1" class="selected-qty">
                                             <button type="button" name="btn_direct_buy" th:data-pro_num="${p.pro_num}"
                                                 class="btn btn-dark w-100 btn-action-main d-flex align-items-center justify-content-center">
-                                                <i class="bi bi-credit-card"></i> 구매
+                                                <i class="fa-solid fa-credit-card"></i>구매
                                             </button>
                                         </form>
                                     </div>

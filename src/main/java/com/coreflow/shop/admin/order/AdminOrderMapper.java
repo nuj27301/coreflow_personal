@@ -25,4 +25,8 @@ public interface AdminOrderMapper {
 	void order_product_del(@Param("ord_code") Integer ord_code, @Param("pro_num") Integer pro_num);
 	
 	void order_price_change(@Param("ord_code") Integer ord_code, @Param("unit_price") Integer unit_price);
+	
+	void admin_ord_message(@Param("ord_code") Integer ord_code, @Param("ord_message") String ord_message);
+	
+	void order_info_edit(OrderDTO dto);
 }

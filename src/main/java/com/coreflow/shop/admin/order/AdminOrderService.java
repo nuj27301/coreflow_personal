@@ -33,7 +33,7 @@ public class AdminOrderService {
 	public void order_status_change(Integer ord_code, String ord_status) {
 		adminOrderMapper.order_status_change(ord_code, ord_status);
 		
-		if(ord_status == "입금완료") {
+		if(ord_status.equals("입금완료")) {
 			adminpaymentMapper.payment_status_change(ord_code, ord_status);
 		}
 	}
@@ -52,5 +52,13 @@ public class AdminOrderService {
 		adminOrderMapper.order_product_del(ord_code, pro_num);
 		adminOrderMapper.order_price_change(ord_code, unit_price);
 		adminpaymentMapper.payment_price_change(ord_code, unit_price);
+	}
+	
+	public void admin_ord_message(Integer ord_code, String ord_message) {
+		adminOrderMapper.admin_ord_message(ord_code, ord_message);
+	}
+	
+	public void order_info_edit(OrderDTO dto) {
+		adminOrderMapper.order_info_edit(dto);
 	}
 }

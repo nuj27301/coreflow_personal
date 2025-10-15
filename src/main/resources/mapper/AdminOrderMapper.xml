@@ -112,6 +112,7 @@
 	<select id="order_product_info" resultType="map">
 	
 		select 
+			p.pro_num,
 			o.ord_code, 
 			p.pro_img, 
 			p.pro_name, 
@@ -143,7 +144,8 @@
 			ord_addr_detail,
 			ord_tel,
 			ord_addr_zipcode,
-			ord_mail
+			ord_mail,
+			ord_message
 		from 
 			orders
 		where 
@@ -172,4 +174,32 @@
 			ord_code = #{ord_code}
 		
 	</update>
+	
+	<update id="admin_ord_message">
+		
+		update 
+			orders
+		set
+			ord_message = #{ord_message}
+		where
+			ord_code = #{ord_code}
+			
+	</update>
+	
+	<update id="order_info_edit">
+		
+		update 
+			orders
+		set 
+            ord_name = #{ord_name},
+            ord_tel = #{ord_tel},
+            ord_addr_basic = #{ord_addr_basic},
+            ord_addr_detail = #{ord_addr_detail},
+            ord_addr_zipcode = #{ord_addr_zipcode},
+            ord_mail = #{ord_mail}
+        where
+        	ord_code = #{ord_code}
+
+	</update>
+	
 </mapper>

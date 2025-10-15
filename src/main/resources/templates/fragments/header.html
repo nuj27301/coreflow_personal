@@ -33,9 +33,15 @@
           </th:block>
 
           <th:block th:if="${session.login_auth != null}">
+            
             <li class="nav-item">
-              <a class="nav-link" href="/member/logout">
-                <i class="bi bi-box-arrow-right me-1"></i>Logout
+              <a class="nav-link" href="/cart/cart_list">
+                <i class="bi bi-cart me-1"></i>Cart
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/order/order_info?type=buy">
+                <i class="bi bi-shop-window me-1"></i>Order
               </a>
             </li>
             <li class="nav-item">
@@ -49,20 +55,17 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/cart/cart_list">
-                <i class="bi bi-cart me-1"></i>Cart
+              <a class="nav-link" href="/member/logout">
+                <i class="bi bi-box-arrow-right me-1"></i>Logout
               </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/order/order_info?type=buy">
-                <i class="bi bi-shop-window me-1"></i>Order
-              </a>
-            </li>
+            
             <li class="nav-item">
               <a class="nav-link" href="/chatapi/chatForm">
                 <i class="bi bi-chat-dots me-1"></i>QnA
               </a>
             </li>
+            
           </th:block>
         </ul>
 

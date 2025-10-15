@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coreflow.shop.admin.review.AdminReviewMapper">
+	
+	<select id="review_list" resultMap="review_pro_reply_map">
+	
+			select 
+				r.rev_code, r.mbsp_id, r.pro_num, r.rev_content, r.rev_rate, r.rev_date,
+				p.pro_num, p.pro_up_folder, p.pro_img,
+				rr.reply_id, rr.manager_id, rr.reply_text, rr.reply_date 
+			from 
+				review r 
+			left outer join 
+				products p
+			on 
+				r.pro_num = p.pro_num
+			left outer join 
+				review_replies rr
+			on 
+				r.rev_code = rr.rev_code
+			where
+				r.rev_code > 0
+				
+			<include refid="search"></include>
+			<include refid="rev_rate"></include>
+			<include refid="rev_content"></include>
+			
+			limit
+				#{cri.pageStart}, #{cri.perPageNum}
+
+	</select>
+	
+	<resultMap type="com.coreflow.shop.common.dto.ReviewDTO" id="review_pro_reply_map">
+	
+		<id property="rev_code" column="rev_code"/>
+		<result property="mbsp_id" column="mbsp_id"/>
+		<result property="pro_num" column="pro_num"/>
+		<result property="rev_content" column="rev_content"/>
+		<result property="rev_rate" column="rev_rate"/>
+		<result property="rev_date" column="rev_date"/>
+		
+		<association property="product" javaType="com.coreflow.shop.common.dto.ProductDTO">
+			<result property="pro_num" column="pro_num"/>
+			<result property="pro_up_folder" column="pro_up_folder"/>
+			<result property="pro_img" column="pro_img"/>
+		</association>
+		
+		<collection property="replies" ofType="com.coreflow.shop.common.dto.ReviewReplyDTO">
+			<id property="reply_id" column="reply_id"/>
+			<result property="manager_id" column="manager_id"/>
+			<result property="reply_text" column="reply_text"/>
+			<result property="reply_date" column="reply_date"/>
+		</collection>
+		
+	</resultMap>
+	
+	<select id="review_count" resultType="int">
+	
+		select
+			count(*)
+		from 
+			review r 
+		left outer join 
+			products p
+		on 
+			r.pro_num = p.pro_num
+		where
+			r.rev_code > 0
+			
+		<include refid="search"></include>
+		<include refid="rev_rate"></include>
+		<include refid="rev_content"></include>
+	
+	</select>
+	
+	<sql id="search">
+		<if test="cri.searchType != null and !cri.searchType.equals('')">
+			<if test="cri.searchType == 'n'.toString">
+				and p.pro_name like concat('%', #{cri.keyword}, '%')
+			</if>
+			<if test="cri.searchType == 'c'.toString">
+				and p.pro_num = #{cri.keyword}
+			</if>
+			<if test="cri.searchType == 'i'.toString">
+				and r.mbsp_id = #{cri.keyword}
+			</if>
+		</if>
+	</sql>
+	
+	<sql id="rev_rate">
+		<if test="rev_rate != null and !rev_rate.equals('')">
+			and r.rev_rate = #{rev_rate}
+		</if>
+	</sql>
+	
+	<sql id="rev_content">
+		<if test="rev_content != null and !rev_content.equals('')">
+			and r.rev_content like concat('%', #{rev_content}, '%')
+		</if>
+	</sql>
+	
+	<select id="review_info" resultType="map">
+	
+		select 
+			r.mbsp_id, r.rev_content, r.pro_num, r.rev_code, r.rev_date, r.rev_rate, 
+			p.pro_img, p.pro_name, p.pro_up_folder
+		from 
+			review r 
+		inner join 
+			products p
+		on 
+			r.pro_num = p.pro_num
+		where 
+			r.rev_code = #{rev_code}
+		
+	</select>
+	
+	<insert id="review_reply">
+		
+		insert into 
+			review_replies(rev_code, manager_id, reply_text)
+		value
+			(#{rev_code}, #{manager_id}, #{reply_text})
+		
+	</insert>
+	
+	<update id="reply_edit">
+	
+		update 
+			review_replies 
+		set 
+			reply_text = #{reply_text}
+		where
+			reply_id = #{reply_id}
+		
+	</update>
+	
+	<delete id="reply_del">
+	
+		delete from 
+			review_replies
+		where 
+			reply_id = #{reply_id}
+		
+	</delete>
+</mapper>

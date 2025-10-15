@@ -88,7 +88,6 @@ public class AdminOrderController {
 		String mbsp_id = order_info.getMbsp_id();
 		MemberDTO memberDTO = memberService.login(mbsp_id);
 		model.addAttribute("member_info", memberDTO);
-		log.info("회원 아이디: " + mbsp_id);
 	}
 	
 	// 주문내역개별삭제
@@ -102,6 +101,28 @@ public class AdminOrderController {
 		return entity;
 	}
 	
+	// 관리자메모저장
+	@PostMapping("/admin_ord_message")
+	public ResponseEntity<String> admin_ord_message(Integer ord_code, String ord_message) throws Exception {
+		ResponseEntity<String> entity = null;
+		
+		adminOrderService.admin_ord_message(ord_code, ord_message);
+		
+		entity = new ResponseEntity<String>("success", HttpStatus.OK);
+		return entity;
+	}
+	
+	// 배송지정보수정
+	@PostMapping("/order_info_edit")
+	public ResponseEntity<String> order_info_edit(OrderDTO dto) throws Exception {
+		ResponseEntity<String> entity = null;
+		
+		adminOrderService.order_info_edit(dto);
+		
+		entity = new ResponseEntity<String>("success", HttpStatus.OK);
+		
+		return entity;
+	}
 	
 	// 주문상품이미지 보여주기
 	@GetMapping("/image_display")
