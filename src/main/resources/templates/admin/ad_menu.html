@@ -9,6 +9,277 @@
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
 	</th:block>
+	
+	<th:block layout:fragment="style1">
+	<style>
+	
+		/* 핵심 현황 카드 스타일 */
+		.row.mb-4 .col {
+		  padding: 0 10px !important;
+		}
+		
+		.row.mb-4 .card {
+		  border: none !important;
+		  border-radius: 16px !important;
+		  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04) !important;
+		  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+		  background: linear-gradient(135deg, #fdfbfb 0%, #f6f9fc 100%) !important;
+		  overflow: hidden !important;
+		  position: relative !important;
+		}
+		
+		.row.mb-4 .card::before {
+		  content: '' !important;
+		  position: absolute !important;
+		  top: 0 !important;
+		  left: 0 !important;
+		  right: 0 !important;
+		  height: 4px !important;
+		  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%) !important;
+		}
+		
+		.row.mb-4 .card:nth-child(2)::before {
+		  background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%) !important;
+		}
+		
+		.row.mb-4 .card:nth-child(3)::before {
+		  background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%) !important;
+		}
+		
+		.row.mb-4 .card:nth-child(4)::before {
+		  background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%) !important;
+		}
+		
+		.row.mb-4 .card:hover {
+		  transform: translateY(-4px) !important;
+		  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08) !important;
+		}
+		
+		.row.mb-4 .card-body {
+		  padding: 24px 20px !important;
+		  background: transparent !important;
+		}
+		
+		.row.mb-4 .card-body h6 {
+		  font-size: 13px !important;
+		  font-weight: 500 !important;
+		  color: #8b95a5 !important;
+		  margin-bottom: 12px !important;
+		  text-transform: uppercase !important;
+		  letter-spacing: 0.5px !important;
+		}
+		
+		.row.mb-4 .card-body h4 {
+		  font-size: 28px !important;
+		  font-weight: 700 !important;
+		  color: #2d3748 !important;
+		  margin: 0 !important;
+		  letter-spacing: -0.5px !important;
+		}
+		
+		/* 이번달 거래현황 & 상품현황 카드 */
+		.row.mb-5 .col {
+		  padding: 0 10px !important;
+		}
+		
+		.row.mb-5 .col > div {
+		  background: linear-gradient(135deg, #fdfbfb 0%, #f6f9fc 100%) !important;
+		  border-radius: 16px !important;
+		  padding: 24px !important;
+		  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04) !important;
+		  transition: all 0.3s ease !important;
+		  border: 1px solid rgba(102, 126, 234, 0.1) !important;
+		}
+		
+		.row.mb-5 .col > div:hover {
+		  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08) !important;
+		  transform: translateY(-2px) !important;
+		}
+		
+		.row.mb-5 h6 {
+		  font-size: 16px !important;
+		  font-weight: 600 !important;
+		  color: #667eea !important;
+		  margin-bottom: 20px !important;
+		  padding-bottom: 12px !important;
+		  border-bottom: 2px solid rgba(102, 126, 234, 0.15) !important;
+		}
+		
+		.row.mb-5 b {
+		  font-size: 13px !important;
+		  font-weight: 600 !important;
+		  color: #718096 !important;
+		  display: block !important;
+		  margin-top: 12px !important;
+		  margin-bottom: 6px !important;
+		}
+		
+		.row.mb-5 p {
+		  font-size: 20px !important;
+		  font-weight: 700 !important;
+		  color: #2d3748 !important;
+		  margin: 0 0 8px 0 !important;
+		}
+		
+		/* 차트 영역 스타일 */
+		.row.mt-5 {
+		  display: flex !important;
+		  flex-wrap: wrap !important;
+		}
+		
+		.row.mt-5 .col {
+		  padding: 0 10px !important;
+		  flex: 1 !important;
+		  min-width: 300px !important;
+		}
+		
+		.row.mt-5 .col > b {
+		  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
+		  border-radius: 16px !important;
+		  padding: 24px !important;
+		  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04) !important;
+		  transition: all 0.3s ease !important;
+		  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+		  display: block !important;
+		  margin-bottom: 0 !important;
+		}
+		
+		.row.mt-5 .col:hover > b {
+		  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08) !important;
+		}
+		
+		.row.mt-5 b {
+		  font-size: 15px !important;
+		  font-weight: 600 !important;
+		  color: #4a5568 !important;
+		  margin-bottom: 20px !important;
+		}
+		
+		.row.mt-5 canvas {
+		  width: 100% !important;
+		  max-width: 100% !important;
+		  height: auto !important;
+		  margin: 0 auto !important;
+		  display: block !important;
+		}
+		
+		/* 최근 주문 내역 테이블 */
+		.mt-5 h6 {
+		  font-size: 18px !important;
+		  font-weight: 600 !important;
+		  color: #2d3748 !important;
+		  margin-bottom: 20px !important;
+		  padding-bottom: 12px !important;
+		  border-bottom: 2px solid rgba(102, 126, 234, 0.15) !important;
+		}
+		
+		.table {
+		  background: #ffffff !important;
+		  border-radius: 12px !important;
+		  overflow: hidden !important;
+		  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04) !important;
+		  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+		}
+		
+		.table thead {
+		  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+		}
+		
+		.table thead th {
+		  font-size: 13px !important;
+		  font-weight: 600 !important;
+		  color: #4a5568 !important;
+		  text-transform: uppercase !important;
+		  letter-spacing: 0.5px !important;
+		  padding: 16px 20px !important;
+		  border: none !important;
+		}
+		
+		.table tbody tr {
+		  transition: all 0.2s ease !important;
+		  border-bottom: 1px solid rgba(0, 0, 0, 0.04) !important;
+		}
+		
+		.table tbody tr:hover {
+		  background: rgba(102, 126, 234, 0.03) !important;
+		  transform: scale(1.01) !important;
+		}
+		
+		.table tbody tr:last-child {
+		  border-bottom: none !important;
+		}
+		
+		.table tbody td {
+		  padding: 16px 20px !important;
+		  font-size: 14px !important;
+		  color: #4a5568 !important;
+		  vertical-align: middle !important;
+		  border: none !important;
+		}
+		
+		.table tbody td:first-child {
+		  font-weight: 600 !important;
+		  color: #667eea !important;
+		}
+		
+		/* 상태 뱃지 스타일링 (선택사항) */
+		.table tbody td:last-child {
+		  font-weight: 500 !important;
+		}
+		
+		
+		/* 애니메이션 효과 */
+		@keyframes fadeInUp {
+		  from {
+		    opacity: 0;
+		    transform: translateY(20px);
+		  }
+		  to {
+		    opacity: 1;
+		    transform: translateY(0);
+		  }
+		}
+		
+		.card-primary {
+		  animation: fadeInUp 0.5s ease !important;
+		}
+		
+		.row.mb-4 .card {
+		  animation: fadeInUp 0.6s ease !important;
+		}
+		
+		.row.mb-4 .card:nth-child(1) { animation-delay: 0.1s !important; }
+		.row.mb-4 .card:nth-child(2) { animation-delay: 0.2s !important; }
+		.row.mb-4 .card:nth-child(3) { animation-delay: 0.3s !important; }
+		.row.mb-4 .card:nth-child(4) { animation-delay: 0.4s !important; }
+		
+		/* 차트 컨테이너 개선 */
+		#categoryPieChart,
+		#thisWeekOrderAmountChart {
+		  width: 100% !important;
+		  max-width: 450px !important; 
+		  margin: 20px auto !important;
+		}
+		
+		.chart-container {
+		  position: relative;
+		  width: 100%;
+   	      padding-bottom: 100%; 
+	      max-width: 450px;
+		  margin: 0 auto;
+		}
+
+.chart-container canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+}
+		
+	</style>
+	</th:block>
+	
 
 	<th:block layout:fragment="content">
 	<div class="container mt-5">
@@ -72,14 +343,18 @@
 
 						<!-- ✅ 통계 차트 영역 -->
 						<div class="row mt-5">
-							<div class="col">
-								<b>거래 카테고리 통계</b><br>
-								<canvas id="categoryPieChart" style="width: 250px; height: 250px;"></canvas>
-							</div>
-							<div class="col">
-								<b>이번주 거래금액 통계</b><br>
-								<canvas id="thisWeekOrderAmountChart" style="width:250px; height:250px"></canvas>
-							</div>
+						    <div class="col">
+						        <b>거래 카테고리 통계</b><br>
+						        <div class="chart-container">
+						            <canvas id="categoryPieChart"></canvas>
+						        </div>
+						    </div>
+						    <div class="col">
+						        <b>이번주 거래금액 통계</b><br>
+						        <div class="chart-container">
+						            <canvas id="thisWeekOrderAmountChart"></canvas>
+						        </div>
+						    </div>
 						</div>
 
 						<!-- ✅ 최근 주문 내역 -->
@@ -102,7 +377,7 @@
 						        <td th:text="${order.customername}"></td>
 						        <td th:text="${order.productname}"></td>
 						        <td th:text="${order.totalamount} + '원'"></td>
-						        <td th:text="${#dates.format(order.orderdate, 'yyyy-MM-dd')}"></td>
+						        <td th:text="${order.orderdate} != null ? ${#temporals.format(order.orderdate, 'yyyy-MM-dd')} : ''"></td>
 						        <td th:text="${order.status}"></td>
 						      </tr>
 						    </tbody>

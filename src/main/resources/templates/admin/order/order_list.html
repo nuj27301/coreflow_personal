@@ -109,6 +109,334 @@
 	
 	</th:block>
 	
+	
+	<th:block layout:fragment="style1">
+	
+	<style>
+		/* 카드 스타일 */
+		.card-primary {
+			border: none !important;
+			border-radius: 16px !important;
+			box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04) !important;
+			transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+			background: linear-gradient(135deg, #fdfbfb 0%, #f6f9fc 100%) !important;
+			overflow: hidden !important;
+			position: relative !important;
+			animation: fadeInUp 0.5s ease !important;
+		}
+		
+		.card-primary::before {
+			content: '' !important;
+			position: absolute !important;
+			top: 0 !important;
+			left: 0 !important;
+			right: 0 !important;
+			height: 4px !important;
+			background: linear-gradient(90deg, #667eea 0%, #764ba2 100%) !important;
+		}
+		
+		.card-header {
+			background: transparent !important;
+			border-bottom: 2px solid rgba(102, 126, 234, 0.15) !important;
+			padding: 24px 20px !important;
+		}
+		
+		.card-title {
+			font-size: 20px !important;
+			font-weight: 600 !important;
+			color: #2d3748 !important;
+			margin: 0 !important;
+		}
+		
+		.card-body {
+			padding: 24px !important;
+			background: transparent !important;
+		}
+		
+		/* 검색 폼 스타일 */
+		.form-control, select.form-control {
+			border: 1px solid rgba(102, 126, 234, 0.2) !important;
+			border-radius: 8px !important;
+			padding: 10px 14px !important;
+			font-size: 14px !important;
+			transition: all 0.3s ease !important;
+			background: #ffffff !important;
+		}
+		
+		.form-control:focus, select.form-control:focus {
+			border-color: #667eea !important;
+			box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+			outline: none !important;
+		}
+		
+		input[type="date"] {
+			border: 1px solid rgba(102, 126, 234, 0.2) !important;
+			border-radius: 8px !important;
+			padding: 8px 12px !important;
+			font-size: 14px !important;
+			transition: all 0.3s ease !important;
+		}
+		
+		input[type="date"]:focus {
+			border-color: #667eea !important;
+			box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+			outline: none !important;
+		}
+		
+		/* 라디오 버튼 스타일 */
+		.form-check-input {
+			accent-color: #667eea !important;
+			cursor: pointer !important;
+		}
+		
+		.form-check-label {
+			font-size: 14px !important;
+			color: #4a5568 !important;
+			cursor: pointer !important;
+			margin-left: 4px !important;
+		}
+		
+		.form-check-inline {
+			margin-right: 16px !important;
+		}
+		
+		/* 버튼 스타일 */
+		.btn {
+			border-radius: 8px !important;
+			padding: 8px 16px !important;
+			font-weight: 500 !important;
+			transition: all 0.3s ease !important;
+			border: none !important;
+		}
+		
+		.btn-primary {
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+			color: #ffffff !important;
+			box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3) !important;
+		}
+		
+		.btn-primary:hover {
+			transform: translateY(-2px) !important;
+			box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4) !important;
+		}
+		
+		.btn-outline-primary {
+			border: 2px solid #667eea !important;
+			color: #667eea !important;
+			background: transparent !important;
+		}
+		
+		.btn-outline-primary:hover {
+			background: #667eea !important;
+			color: #ffffff !important;
+			transform: translateY(-2px) !important;
+		}
+		
+		.btn-outline-info {
+			border: 2px solid #4facfe !important;
+			color: #4facfe !important;
+			background: transparent !important;
+			font-size: 13px !important;
+			padding: 6px 12px !important;
+		}
+		
+		.btn-outline-info:hover {
+			background: #4facfe !important;
+			color: #ffffff !important;
+		}
+		
+		.btn-sm {
+			font-size: 13px !important;
+			padding: 6px 12px !important;
+		}
+		
+		.btn-block {
+			width: 100% !important;
+			display: block !important;
+		}
+		
+		/* 테이블 스타일 */
+		.table {
+			background: #ffffff !important;
+			border-radius: 12px !important;
+			overflow: hidden !important;
+			box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04) !important;
+			border: 1px solid rgba(0, 0, 0, 0.05) !important;
+		}
+		
+		.table thead {
+			background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+		}
+		
+		.table thead th {
+			font-size: 13px !important;
+			font-weight: 600 !important;
+			color: #4a5568 !important;
+			text-transform: uppercase !important;
+			letter-spacing: 0.5px !important;
+			padding: 16px 20px !important;
+			border: none !important;
+		}
+		
+		.table tbody tr {
+			transition: all 0.2s ease !important;
+			border-bottom: 1px solid rgba(0, 0, 0, 0.04) !important;
+		}
+		
+		.table tbody tr:hover {
+			background: rgba(102, 126, 234, 0.03) !important;
+			transform: scale(1.005) !important;
+		}
+		
+		.table tbody tr:last-child {
+			border-bottom: none !important;
+		}
+		
+		.table tbody td {
+			padding: 16px 20px !important;
+			font-size: 14px !important;
+			color: #4a5568 !important;
+			vertical-align: middle !important;
+			border: none !important;
+		}
+		
+		.table tbody td a {
+			color: #667eea !important;
+			font-weight: 600 !important;
+			text-decoration: none !important;
+			transition: all 0.2s ease !important;
+		}
+		
+		.table tbody td a:hover {
+			color: #764ba2 !important;
+			text-decoration: underline !important;
+		}
+		
+		.table tbody td select {
+			border: 1px solid rgba(102, 126, 234, 0.2) !important;
+			border-radius: 6px !important;
+			padding: 6px 10px !important;
+			font-size: 13px !important;
+			transition: all 0.3s ease !important;
+			background: #ffffff !important;
+		}
+		
+		.table tbody td select:focus {
+			border-color: #667eea !important;
+			box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1) !important;
+			outline: none !important;
+		}
+		
+		.table tbody td button {
+			margin-left: 8px !important;
+		}
+		
+		.table-bordered {
+			border: none !important;
+		}
+		
+		.table-bordered thead th,
+		.table-bordered thead td {
+			border: none !important;
+		}
+		
+		/* 페이징 스타일 */
+		.pagination {
+			margin: 20px 0 !important;
+			justify-content: center !important;
+		}
+		
+		.page-item {
+			margin: 0 4px !important;
+		}
+		
+		.page-link {
+			border: 2px solid rgba(102, 126, 234, 0.2) !important;
+			color: #667eea !important;
+			border-radius: 8px !important;
+			padding: 8px 14px !important;
+			font-weight: 500 !important;
+			transition: all 0.3s ease !important;
+			background: #ffffff !important;
+		}
+		
+		.page-link:hover {
+			background: #667eea !important;
+			color: #ffffff !important;
+			border-color: #667eea !important;
+			transform: translateY(-2px) !important;
+		}
+		
+		.page-item.active .page-link {
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+			border-color: #667eea !important;
+			color: #ffffff !important;
+			box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3) !important;
+		}
+		
+		/* 간격 조정 */
+		.row {
+			margin-bottom: 16px !important;
+		}
+		
+		.mt-1 {
+			margin-top: 12px !important;
+		}
+		
+		.mt-2 {
+			margin-top: 16px !important;
+		}
+		
+		.mt-3 {
+			margin-top: 20px !important;
+		}
+		
+		.mt-4 {
+			margin-top: 24px !important;
+		}
+		
+		.mt-5 {
+			margin-top: 32px !important;
+		}
+		
+		/* 카드 푸터 스타일 */
+		.card-footer {
+			background: transparent !important;
+			border-top: 1px solid rgba(0, 0, 0, 0.05) !important;
+			padding: 20px !important;
+		}
+		
+		/* 텍스트 센터 정렬 */
+		.text-center {
+			text-align: center !important;
+		}
+		
+		/* 애니메이션 */
+		@keyframes fadeInUp {
+			from {
+				opacity: 0;
+				transform: translateY(20px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+		
+		/* 라벨 스타일 */
+		.row .col-2 {
+			font-weight: 600 !important;
+			color: #4a5568 !important;
+			display: flex !important;
+			align-items: center !important;
+			font-size: 14px !important;
+		}
+	</style>
+	
+	
+	</th:block>
+	
+	
 	<th:block layout:fragment="content">
 	      
 	  <div class="container mt-5">

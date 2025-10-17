@@ -81,9 +81,426 @@
     
     <th:block layout:fragment="script1"></th:block>
     
+    <th:block layout:fragment="style1"></th:block>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-        
+     
+    <style>
+    
+		/* ========================
+		   사이드바 - 다크 테마 색상
+		======================== */
+
+		/* 사이드바 전체 배경 */
+		.app-sidebar {
+		  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2) !important;
+		}
+		
+		/* 브랜드 영역 */
+		.sidebar-brand {
+		  background: rgba(60,60,60,0.6) !important;
+		  border-bottom: 1px solid rgba(100,100,100,0.4) !important;
+		  padding: 20px 15px !important;
+		}
+		
+		.brand-link {
+		  display: flex !important;
+		  align-items: center !important;
+		  text-decoration: none !important;
+		  padding: 10px 15px !important;
+		  border-radius: 12px !important;
+		  transition: all 0.3s ease !important;
+		}
+		
+		.brand-link:hover {
+		  background: rgba(80,80,80,0.6) !important;
+		  transform: translateX(5px) !important;
+		}
+		
+		.brand-image {
+		  width: 40px !important;
+		  height: 40px !important;
+		  margin-right: 12px !important;
+		  opacity: 0.9 !important;
+		  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5)) !important;
+		}
+		
+		.brand-text {
+		  font-size: 18px !important;
+		  font-weight: 700 !important;
+		  color: #ffffff !important;
+		  letter-spacing: 0.5px !important;
+		  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+		}
+		
+		/* 사이드바 래퍼 */
+		.sidebar-wrapper {
+		  padding: 15px 10px !important;
+		}
+		
+		/* 메뉴 아이템 */
+		.nav-item {
+		  margin-bottom: 8px !important;
+		}
+		
+		/* 메뉴 링크 - 기본 상태 */
+		.nav-item > .nav-link {
+		  display: flex !important;
+		  align-items: center !important;
+		  padding: 14px 18px !important;
+		  border-radius: 12px !important;
+		  color: rgba(255, 255, 255, 0.9) !important;
+		  font-size: 14px !important;
+		  font-weight: 600 !important;
+		  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+		  background: rgba(60,60,60,0.4) !important;
+		  border: 1px solid rgba(80,80,80,0.4) !important;
+		  margin-bottom: 5px !important;
+		}
+		
+		/* 메뉴 링크 - 호버 상태 */
+		.nav-item > .nav-link:hover {
+		  background: rgba(80,80,80,0.6) !important;
+		  color: #ffffff !important;
+		  transform: translateX(5px) !important;
+		  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+		}
+		
+		/* 메뉴 링크 - 활성 상태 */
+		.nav-item > .nav-link.active {
+		  background: rgba(100,100,100,0.6) !important;
+		  color: #ffffff !important;
+		  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+		  border-color: rgba(120,120,120,0.6) !important;
+		}
+		
+		/* 메뉴 아이콘 */
+		.nav-icon {
+		  font-size: 18px !important;
+		  margin-right: 12px !important;
+		  min-width: 20px !important;
+		  text-align: center !important;
+		  color: rgba(255, 255, 255, 0.9) !important;
+		}
+		
+		.nav-link:hover .nav-icon {
+		  color: #ffffff !important;
+		  transform: scale(1.1) !important;
+		}
+		
+		/* 메뉴 텍스트 */
+		.nav-link p {
+		  margin: 0 !important;
+		  flex: 1 !important;
+		  font-size: 14px !important;
+		}
+		
+		/* 화살표 아이콘 */
+		.nav-arrow {
+		  font-size: 12px !important;
+		  transition: transform 0.3s ease !important;
+		  color: rgba(255, 255, 255, 0.7) !important;
+		}
+		
+		.nav-item.menu-open > .nav-link .nav-arrow {
+		  transform: rotate(90deg) !important;
+		  color: #ffffff !important;
+		}
+		
+		/* 서브메뉴 */
+		.nav-treeview {
+		  padding-left: 15px !important;
+		  padding-top: 8px !important;
+		  padding-bottom: 8px !important;
+		  background: rgba(40,40,40,0.6) !important;
+		  border-radius: 10px !important;
+		  margin-top: 5px !important;
+		  margin-bottom: 10px !important;
+		}
+		
+		/* 서브메뉴 링크 */
+		.nav-treeview .nav-link {
+		  padding: 10px 15px !important;
+		  border-radius: 8px !important;
+		  color: rgba(255, 255, 255, 0.8) !important;
+		  font-size: 13px !important;
+		  font-weight: 500 !important;
+		  transition: all 0.3s ease !important;
+		  background: transparent !important;
+		}
+		
+		.nav-treeview .nav-link:hover {
+		  background: rgba(80,80,80,0.6) !important;
+		  color: #ffffff !important;
+		  transform: translateX(5px) !important;
+		  padding-left: 20px !important;
+		}
+		
+		.nav-treeview .nav-link.active {
+		  background: rgba(100,100,100,0.6) !important;
+		  color: #ffffff !important;
+		  font-weight: 600 !important;
+		}
+		
+		/* 서브메뉴 아이콘 */
+		.nav-treeview .nav-icon {
+		  font-size: 10px !important;
+		  margin-right: 10px !important;
+		  color: rgba(255, 255, 255, 0.6) !important;
+		}
+		
+		.nav-treeview .nav-link:hover .nav-icon {
+		  color: #ffffff !important;
+		}
+		
+		/* 스크롤바 */
+		.sidebar-wrapper::-webkit-scrollbar {
+		  width: 6px !important;
+		}
+		
+		.sidebar-wrapper::-webkit-scrollbar-track {
+		  background: rgba(0,0,0,0.1) !important;
+		  border-radius: 10px !important;
+		}
+		
+		.sidebar-wrapper::-webkit-scrollbar-thumb {
+		  background: rgba(100,100,100,0.4) !important;
+		  border-radius: 10px !important;
+		}
+		
+		.sidebar-wrapper::-webkit-scrollbar-thumb:hover {
+		  background: rgba(120,120,120,0.6) !important;
+		}
+		
+		/* 애니메이션 */
+		@keyframes slideIn {
+		  from {
+		    opacity: 0;
+		    transform: translateX(-10px);
+		  }
+		  to {
+		    opacity: 1;
+		    transform: translateX(0);
+		  }
+		}
+		
+		.nav-item {
+		  animation: slideIn 0.4s ease forwards !important;
+		}
+		
+		.nav-item:nth-child(1) { animation-delay: 0.05s !important; }
+		.nav-item:nth-child(2) { animation-delay: 0.1s !important; }
+		.nav-item:nth-child(3) { animation-delay: 0.15s !important; }
+		.nav-item:nth-child(4) { animation-delay: 0.2s !important; }
+		.nav-item:nth-child(5) { animation-delay: 0.25s !important; }
+		.nav-item:nth-child(6) { animation-delay: 0.3s !important; }
+		
+		/* 다크모드 경계선 */
+		[data-bs-theme="dark"] .app-sidebar {
+		  border-right: 1px solid rgba(100,100,100,0.4) !important;
+		}
+		
+		/* 호버 시 글로우 효과 */
+		.nav-item > .nav-link:hover {
+		  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1) !important;
+		}
+		
+		/* 활성 메뉴 강조 */
+		.nav-item.menu-open > .nav-link {
+		  background: rgba(120,120,120,0.6) !important;
+		  border-left: 4px solid #ffffff !important;
+		  padding-left: 14px !important;
+		}
+
+		
+		
+		/* ========================
+		   상단 네비게이션 - 다크 테마
+		======================== */
+		
+		/* 전체 navbar 배경 */
+		.app-header.navbar {
+		  background: linear-gradient(135deg, rgba(30,30,30,0.95) 0%, rgba(50,50,50,0.98) 100%) !important;
+		  box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+		  color: #ffffff !important;
+		}
+		
+		/* Navbar 링크 기본 스타일 */
+		.app-header .nav-link {
+		  color: rgba(255,255,255,0.9) !important;
+		  font-weight: 500 !important;
+		  transition: all 0.3s ease !important;
+		}
+		
+		.app-header .nav-link:hover {
+		  color: #ffffff !important;
+		  background: rgba(80,80,80,0.4) !important;
+		  border-radius: 8px !important;
+		  transform: translateY(-2px) !important;
+		}
+		
+		/* Navbar 아이콘 */
+		.app-header .bi {
+		  color: rgba(255,255,255,0.9) !important;
+		  font-size: 18px !important;
+		  transition: all 0.3s ease !important;
+		}
+		
+		.app-header .nav-link:hover .bi {
+		  color: #ffffff !important;
+		  transform: scale(1.2) !important;
+		}
+		
+		/* Navbar 배지 */
+		.navbar-badge.badge {
+		  font-size: 12px !important;
+		  font-weight: 600 !important;
+		  color: #ffffff !important;
+		  background-color: rgba(255,255,255,0.2) !important;
+		}
+		
+		/* 드롭다운 메뉴 */
+		.app-header .dropdown-menu {
+		  background: linear-gradient(135deg, rgba(40,40,40,0.95) 0%, rgba(60,60,60,0.95) 100%) !important;
+		  border: 1px solid rgba(100,100,100,0.4) !important;
+		  border-radius: 12px !important;
+		  box-shadow: 0 4px 20px rgba(0,0,0,0.4) !important;
+		  padding: 10px 0 !important;
+		}
+		
+		/* 드롭다운 아이템 */
+		.app-header .dropdown-item {
+		  color: #ffffff !important;
+		  font-size: 14px !important;
+		  padding: 10px 20px !important;
+		  transition: all 0.3s ease !important;
+		  background: transparent !important;
+		}
+		
+		.app-header .dropdown-item:hover {
+		  background: rgba(80,80,80,0.6) !important;
+		  color: #ffffff !important;
+		  transform: translateX(5px) !important;
+		}
+		
+		/* 드롭다운 헤더 */
+		.user-header.text-bg-primary {
+		  background: linear-gradient(135deg, rgba(60,60,60,0.6) 0%, rgba(80,80,80,0.7) 100%) !important;
+		  color: #ffffff !important;
+		  text-align: center !important;
+		  padding: 20px !important;
+		  border-bottom: 1px solid rgba(100,100,100,0.4) !important;
+		}
+		
+		.user-header img {
+		  border: 2px solid rgba(255,255,255,0.3) !important;
+		  box-shadow: 0 2px 8px rgba(0,0,0,0.4) !important;
+		}
+		
+		/* 드롭다운 footer */
+		.user-footer a.btn {
+		  background: rgba(60,60,60,0.6) !important;
+		  color: #ffffff !important;
+		  border-radius: 8px !important;
+		  padding: 6px 12px !important;
+		  transition: all 0.3s ease !important;
+		}
+		
+		.user-footer a.btn:hover {
+		  background: rgba(80,80,80,0.8) !important;
+		  color: #ffffff !important;
+		}
+		
+		/* 검색창 아이콘 */
+		.navbar-nav .nav-link[data-widget="navbar-search"] i {
+		  color: rgba(255,255,255,0.9) !important;
+		}
+		
+		.navbar-nav .nav-link[data-widget="navbar-search"]:hover i {
+		  color: #ffffff !important;
+		}
+		
+		/* 전체 드롭다운 텍스트 */
+		.dropdown-menu .fs-7, 
+		.dropdown-menu .text-secondary {
+		  color: rgba(200,200,200,0.8) !important;
+		  font-size: 12px !important;
+		}
+		
+		/* 드롭다운 메시지 이미지 */
+		.dropdown-menu img.img-size-50 {
+		  border: 1px solid rgba(255,255,255,0.2) !important;
+		  box-shadow: 0 2px 8px rgba(0,0,0,0.4) !important;
+		  border-radius: 50% !important;
+		}
+		
+		/* 전체 호버 효과 */
+		.dropdown-menu a.dropdown-item:hover {
+		  box-shadow: 0 2px 12px rgba(0,0,0,0.4) !important;
+		}
+		
+		/* 풀스크린 토글 아이콘 */
+		.nav-item > .nav-link[data-lte-toggle="fullscreen"] i {
+		  color: rgba(255,255,255,0.9) !important;
+		}
+		
+		.nav-item > .nav-link[data-lte-toggle="fullscreen"]:hover i {
+		  color: #ffffff !important;
+		}
+		
+		body {
+		  background: linear-gradient(135deg, rgba(30,30,30,0.03) 0%, rgba(50,50,50,0.07) 100%) !important;
+		}
+		
+		
+		
+		.card-primary::before {
+			content: '' !important;
+			position: absolute !important;
+			top: 0 !important;
+			left: 0 !important;
+			right: 0 !important;
+			height: 4px !important;
+			background: linear-gradient(90deg, #667eea 0%, #764ba2 100%) !important;
+		}
+		
+		/* 메인 카드 스타일 */
+		.card-primary {
+		  border: none !important;
+		  border-radius: 20px !important;
+		  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08) !important;
+		  overflow: hidden !important;
+		  background: linear-gradient(135deg, rgba(30,30,30,0.05) 0%, rgba(50,50,50,0.1) 100%) !important;
+		  color: rgba(255,255,255,0.9) !important; /* 글자 색 변경 */
+		}
+		
+		/* 카드 헤더 */
+		.card-primary .card-header {
+		  background: linear-gradient(135deg, rgba(100,100,100,0.4) 0%, rgba(60,60,60,0.6) 100%) !important;
+		  border: none !important;
+		  padding: 24px 28px !important;
+		  border-radius: 0 !important;
+		  color: #ffffff !important; /* 헤더 글자 색 */
+		}
+		
+		/* 카드 제목 */
+		.card-primary .card-header .card-title {
+		  color: #ffffff !important;
+		  font-size: 22px !important;
+		  font-weight: 600 !important;
+		  margin: 0 !important;
+		  letter-spacing: -0.3px !important;
+		}
+		
+		/* 카드 본문 */
+		.card-primary .card-body {
+		  padding: 32px !important;
+		  background: linear-gradient(135deg, rgba(30,30,30,0.03) 0%, rgba(50,50,50,0.07) 100%) !important;
+		  color: rgba(255,255,255,0.9) !important; /* 본문 글자 색 */
+		}
+
+  </style>
+    
   </head>
   <!--end::Head-->
   <!--begin::Body-->

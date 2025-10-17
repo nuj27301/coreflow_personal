@@ -7,6 +7,287 @@
 		<script src="/ckeditor/ckeditor.js"></script>
 	</th:block>
 
+	<th:block layout:fragment="style1">
+	<style>
+		/* 메인 카드 스타일 */
+		.card-primary {
+		  border: none !important;
+		  border-radius: 16px !important;
+		  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04) !important;
+		  background: linear-gradient(135deg, #fdfbfb 0%, #f6f9fc 100%) !important;
+		  overflow: hidden !important;
+		  animation: fadeInUp 0.5s ease !important;
+		}
+		
+		.card-header {
+		  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+		  border: none !important;
+		  padding: 20px 24px !important;
+		}
+		
+		.card-title {
+		  color: #ffffff !important;
+		  font-size: 20px !important;
+		  font-weight: 600 !important;
+		  margin: 0 !important;
+		}
+		
+		.card-body {
+		  padding: 32px !important;
+		  background: transparent !important;
+		}
+		
+		/* 폼 그룹 스타일 */
+		.form-group {
+		  margin-bottom: 24px !important;
+		}
+		
+		.form-group label {
+		  font-size: 14px !important;
+		  font-weight: 600 !important;
+		  color: #4a5568 !important;
+		  margin-bottom: 10px !important;
+		  display: block !important;
+		}
+		
+		/* Input 스타일 */
+		.form-control {
+		  border: 2px solid rgba(0, 0, 0, 0.08) !important;
+		  border-radius: 8px !important;
+		  padding: 12px 16px !important;
+		  font-size: 14px !important;
+		  transition: all 0.3s ease !important;
+		  background: #ffffff !important;
+		}
+		
+		.form-control:focus {
+		  border-color: #667eea !important;
+		  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+		  outline: none !important;
+		}
+		
+		.form-control::placeholder {
+		  color: #cbd5e0 !important;
+		}
+		
+		/* Select 스타일 */
+		.custom-select {
+		  border: 2px solid rgba(0, 0, 0, 0.08) !important;
+		  border-radius: 8px !important;
+		  padding: 12px 16px !important;
+		  font-size: 14px !important;
+		  transition: all 0.3s ease !important;
+		  background: #ffffff !important;
+		  appearance: none !important;
+		  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23667eea' d='M6 9L1 4h10z'/%3E%3C/svg%3E") !important;
+		  background-repeat: no-repeat !important;
+		  background-position: right 12px center !important;
+		  padding-right: 36px !important;
+		}
+		
+		.custom-select:focus {
+		  border-color: #667eea !important;
+		  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+		  outline: none !important;
+		}
+		
+		/* Textarea 스타일 */
+		textarea.form-control {
+		  min-height: 120px !important;
+		  resize: vertical !important;
+		}
+		
+		/* 파일 업로드 스타일 */
+		.custom-file {
+		  position: relative !important;
+		  display: inline-block !important;
+		  width: 100% !important;
+		  height: calc(2.25rem + 2px) !important;
+		  margin-bottom: 0 !important;
+		}
+		
+		.custom-file-input {
+		  position: relative !important;
+		  z-index: 2 !important;
+		  width: 100% !important;
+		  height: calc(2.25rem + 2px) !important;
+		  margin: 0 !important;
+		  opacity: 0 !important;
+		  cursor: pointer !important;
+		}
+		
+		.custom-file-label {
+		  position: absolute !important;
+		  top: 0 !important;
+		  right: 0 !important;
+		  left: 0 !important;
+		  z-index: 1 !important;
+		  height: calc(2.25rem + 2px) !important;
+		  padding: 12px 16px !important;
+		  font-weight: 400 !important;
+		  line-height: 1.5 !important;
+		  color: #718096 !important;
+		  background-color: #ffffff !important;
+		  border: 2px solid rgba(0, 0, 0, 0.08) !important;
+		  border-radius: 8px !important;
+		  transition: all 0.3s ease !important;
+		}
+		
+		.custom-file-input:focus ~ .custom-file-label {
+		  border-color: #667eea !important;
+		  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+		}
+		
+		.input-group-append .input-group-text {
+		  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+		  color: #ffffff !important;
+		  border: none !important;
+		  border-radius: 8px !important;
+		  padding: 12px 20px !important;
+		  font-weight: 600 !important;
+		  font-size: 14px !important;
+		  margin-left: 8px !important;
+		}
+		
+		/* 이미지 미리보기 */
+		#img_preview {
+		  width: 200px !important;
+		  height: 200px !important;
+		  border-radius: 12px !important;
+		  object-fit: cover !important;
+		  border: 2px solid rgba(0, 0, 0, 0.08) !important;
+		  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+		  transition: all 0.3s ease !important;
+		}
+		
+		#img_preview:hover {
+		  transform: scale(1.05) !important;
+		  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
+		}
+		
+		/* 라디오 버튼 스타일 */
+		.form-check-inline {
+		  margin-right: 20px !important;
+		}
+		
+		.form-check-input {
+		  width: 18px !important;
+		  height: 18px !important;
+		  cursor: pointer !important;
+		  accent-color: #667eea !important;
+		  margin-right: 8px !important;
+		}
+		
+		.form-check-label {
+		  font-size: 14px !important;
+		  color: #4a5568 !important;
+		  cursor: pointer !important;
+		  font-weight: 500 !important;
+		}
+		
+		/* 버튼 스타일 */
+		.card-footer {
+		  background: transparent !important;
+		  border: none !important;
+		  padding: 24px 32px !important;
+		  text-align: center !important;
+		}
+		
+		.btn-primary {
+		  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+		  border: none !important;
+		  border-radius: 8px !important;
+		  padding: 12px 48px !important;
+		  font-weight: 600 !important;
+		  font-size: 15px !important;
+		  transition: all 0.3s ease !important;
+		  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3) !important;
+		  color: #ffffff !important;
+		}
+		
+		.btn-primary:hover {
+		  transform: translateY(-2px) !important;
+		  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4) !important;
+		}
+		
+		.btn-primary:active {
+		  transform: translateY(0) !important;
+		}
+		
+		/* 카테고리 선택 영역 스타일 개선 */
+		.form-group:first-child {
+		  background: #ffffff !important;
+		  padding: 20px !important;
+		  border-radius: 12px !important;
+		  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+		  border: 1px solid rgba(102, 126, 234, 0.1) !important;
+		}
+		
+		/* Number input 화살표 스타일 */
+		input[type="number"]::-webkit-inner-spin-button,
+		input[type="number"]::-webkit-outer-spin-button {
+		  opacity: 1 !important;
+		  cursor: pointer !important;
+		}
+		
+		/* 애니메이션 효과 */
+		@keyframes fadeInUp {
+		  from {
+		    opacity: 0;
+		    transform: translateY(20px);
+		  }
+		  to {
+		    opacity: 1;
+		    transform: translateY(0);
+		  }
+		}
+		
+		.form-group {
+		  animation: fadeInUp 0.6s ease !important;
+		}
+		
+		.form-group:nth-child(1) { animation-delay: 0.05s !important; }
+		.form-group:nth-child(2) { animation-delay: 0.1s !important; }
+		.form-group:nth-child(3) { animation-delay: 0.15s !important; }
+		.form-group:nth-child(4) { animation-delay: 0.2s !important; }
+		.form-group:nth-child(5) { animation-delay: 0.25s !important; }
+		.form-group:nth-child(6) { animation-delay: 0.3s !important; }
+		.form-group:nth-child(7) { animation-delay: 0.35s !important; }
+		.form-group:nth-child(8) { animation-delay: 0.4s !important; }
+		.form-group:nth-child(9) { animation-delay: 0.45s !important; }
+		
+		/* CKEditor 스타일 개선 */
+		.cke {
+		  border: 2px solid rgba(0, 0, 0, 0.08) !important;
+		  border-radius: 8px !important;
+		  overflow: hidden !important;
+		  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+		}
+		
+		.cke_top {
+		  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+		  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+		}
+		
+		/* 반응형 개선 */
+		@media (max-width: 768px) {
+		  .card-body {
+		    padding: 20px !important;
+		  }
+		  
+		  .form-group:first-child {
+		    padding: 16px !important;
+		  }
+		  
+		  #img_preview {
+		    width: 150px !important;
+		    height: 150px !important;
+		  }
+		}
+	</style>
+	</th:block>
+	
+
 	<th:block layout:fragment="content">
 	      
 	  <div class="container mt-5">
