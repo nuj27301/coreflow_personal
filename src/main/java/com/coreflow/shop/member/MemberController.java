@@ -155,7 +155,7 @@ public class MemberController {
 	@GetMapping("/lostpass")
 	public String lostpass() throws Exception {
 		
-		return "/member/lostpass";
+		return "member/lostpass";
 	}
 		
 	// 아이디 찾기 - 메일발송
