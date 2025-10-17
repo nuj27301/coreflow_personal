@@ -95,6 +95,15 @@
 		
 	</select>
 	
-	
+	<select id="findOrderById" resultType="com.coreflow.shop.common.dto.OrderDTO">
+
+   select
+      *
+   from 
+      order_list
+   where 
+        od.or_code = #{or_code}
+
+	</select>
 	
 </mapper>

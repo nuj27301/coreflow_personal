@@ -29,4 +29,5 @@ public interface AdminOrderMapper {
 	void admin_ord_message(@Param("ord_code") Integer ord_code, @Param("ord_message") String ord_message);
 	
 	void order_info_edit(OrderDTO dto);
+	
 }

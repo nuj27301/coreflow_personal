@@ -474,7 +474,7 @@
 									<div class="alert alert-danger" th:unless="${#lists.size(reviewDTO.replies)} > 0"> 답변대기</div>
 								</td>
 								<td>
-									<img style="width: 100px; height: 100px;" src="|/admin/review/image_display?dateFolderName=${reviewDTO.product.pro_up_folder}&fileName=s_${reviewDTO.product.pro_img}">
+									<img style="width: 100px; height: 100px;" th:src="|/admin/review/image_display?dateFolderName=${reviewDTO.product.pro_up_folder}&fileName=s_${reviewDTO.product.pro_img}|">
 									[[${reviewDTO.pro_num}]] <br>
 									[[${reviewDTO.product.pro_name}]]
 								</td>

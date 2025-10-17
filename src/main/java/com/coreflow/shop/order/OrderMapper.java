@@ -15,5 +15,7 @@ public interface OrderMapper {
 	List<Map<String, Object>> order_result(Integer ord_code);
 	
 	List<Map<String, Object>> myorder_manage(String mbsp_id);
+	
+	OrderDTO findOrderById(@Param("or_code") int or_code);
 
 }

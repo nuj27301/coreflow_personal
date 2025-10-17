@@ -53,6 +53,13 @@
     }
 
   </style>
+  
+  <script th:inline="javascript">
+  // REST API
+		function fnClick() {
+			location.href = [[${location}]]
+		};
+		</script>
 </head>
 
 <th:block layout:fragment="content">
@@ -79,6 +86,9 @@
             <div class="mb-3 text-center">
               <button type="submit" class="btn btn-primary me-2">Login</button>
               <a href="/member/lostpass" class="btn btn-outline-primary">ID/PW Search</a>
+              <a href="javascript:void(0)"  th:onclick="javascript:fnClick();" style="cursor: pointer;">
+				<img src="/image/sns/kakao_login_medium_wide.png">
+			  </a>
             </div>
           </form>
         </div>
