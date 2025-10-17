@@ -3,74 +3,331 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{admin/layouts/ad_layout}">
 
-<th:block layout:fragment="script1">
-	<script>
-		// 날짜 설정 함수
-		function setDateRange(range) {
-			const today = new Date(); // 날짜객체.
-			const startInput = document.getElementById('start_date'); // 시작날짜 태그를 참조
-			const endInput = document.getElementById('end_date'); // 종료날짜 태그를 참조
-
-			let startDate, endDate;
-
-			switch (range) {
-				case 'today':
-					startDate = new Date(today);
-					endDate = new Date(today);
-					break;
-				case 'week':
-					startDate = new Date(today);
-					startDate.setDate(today.getDate() - 6);
-					endDate = new Date(today);
-					break;
-				case 'month':
-					startDate = new Date(today);
-					startDate.setMonth(today.getMonth() - 1);
-					endDate = new Date(today);
-					break;
-			}
-
-			// 포맷팅하여 input에 값 설정
-			startInput.value = startDate ? formatDate(startDate) : '';
-			endInput.value = endDate ? formatDate(endDate) : '';
+<th:block layout:fragment="style1">
+	<style>
+		/* 메인 카드 스타일 */
+		.card-primary {
+		  border: none !important;
+		  border-radius: 16px !important;
+		  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04) !important;
+		  background: linear-gradient(135deg, #fdfbfb 0%, #f6f9fc 100%) !important;
+		  overflow: hidden !important;
 		}
-
-		// 날짜를 yyyy-MM-dd 형식으로 포맷
-		function formatDate(date) {
-			const year = date.getFullYear();
-			const month = String(date.getMonth() + 1).padStart(2, '0');
-			const day = String(date.getDate()).padStart(2, '0');
-			return `${year}-${month}-${day}`;
+		
+		.card-header {
+		  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+		  border: none !important;
+		  padding: 20px 24px !important;
 		}
-
-		// 설정된 값을 초기화(?)
-		function initializeSearchForm() {
-			// Get form elements by their IDs or names
-			const searchType = document.querySelector('select[name="searchType"]');
-			const keyword = document.querySelector('input[name="keyword"]');
-			const genderType = document.querySelector('select[name="genderType"]');
-			const period = document.querySelector('select[name="period"]');
-			const startDate = document.getElementById('start_date');
-			const endDate = document.getElementById('end_date');
-
-			// Reset dropdowns to the default options
-			if (searchType) searchType.value = ''; // Default to "검색종류 선택"
-			if (period) period.value = 'mbsp_datesub'; // Default to "주문일"
-			if (genderType) genderType.value = '';
-
-			// Clear text input fields
-			if (keyword) keyword.value = '';
-			if (startDate) startDate.value = '';
-			if (endDate) endDate.value = '';
-
-			// Reset radio buttons to default (first radio button is checked)
-
+		
+		.card-title {
+		  color: #ffffff !important;
+		  font-size: 20px !important;
+		  font-weight: 600 !important;
+		  margin: 0 !important;
 		}
-	</script>
+		
+		.card-body {
+		  padding: 32px !important;
+		  background: transparent !important;
+		}
+		
+		/* 검색 폼 스타일 */
+		.card-body form {
+		  background: #ffffff !important;
+		  border-radius: 12px !important;
+		  padding: 24px !important;
+		  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04) !important;
+		  border: 1px solid rgba(102, 126, 234, 0.1) !important;
+		  margin-bottom: 32px !important;
+		}
+		
+		.fw-bold {
+		  font-size: 14px !important;
+		  font-weight: 600 !important;
+		  color: #4a5568 !important;
+		  display: flex !important;
+		  align-items: center !important;
+		}
+		
+		.form-control, .form-select {
+		  border: 2px solid rgba(0, 0, 0, 0.08) !important;
+		  border-radius: 8px !important;
+		  padding: 10px 14px !important;
+		  font-size: 14px !important;
+		  transition: all 0.3s ease !important;
+		  background: #ffffff !important;
+		}
+		
+		.form-control:focus, .form-select:focus {
+		  border-color: #667eea !important;
+		  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+		  outline: none !important;
+		}
+		
+		/* 버튼 스타일 */
+		.btn-primary {
+		  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+		  border: none !important;
+		  border-radius: 8px !important;
+		  padding: 10px 32px !important;
+		  font-weight: 600 !important;
+		  font-size: 14px !important;
+		  transition: all 0.3s ease !important;
+		  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3) !important;
+		}
+		
+		.btn-primary:hover {
+		  transform: translateY(-2px) !important;
+		  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4) !important;
+		}
+		
+		.btn-outline-primary {
+		  border: 2px solid #667eea !important;
+		  color: #667eea !important;
+		  background: transparent !important;
+		  border-radius: 8px !important;
+		  padding: 10px 32px !important;
+		  font-weight: 600 !important;
+		  font-size: 14px !important;
+		  transition: all 0.3s ease !important;
+		}
+		
+		.btn-outline-primary:hover {
+		  background: #667eea !important;
+		  color: #ffffff !important;
+		  transform: translateY(-2px) !important;
+		}
+		
+		.btn-sm.btn-outline-info {
+		  border: 2px solid #4facfe !important;
+		  color: #4facfe !important;
+		  background: transparent !important;
+		  border-radius: 6px !important;
+		  padding: 6px 16px !important;
+		  font-size: 13px !important;
+		  font-weight: 500 !important;
+		  transition: all 0.3s ease !important;
+		}
+		
+		.btn-sm.btn-outline-info:hover {
+		  background: #4facfe !important;
+		  color: #ffffff !important;
+		  transform: translateY(-1px) !important;
+		}
+		
+		.btn-outline-danger {
+		  border: 2px solid #f5576c !important;
+		  color: #f5576c !important;
+		  background: transparent !important;
+		  border-radius: 8px !important;
+		  padding: 8px 20px !important;
+		  font-weight: 600 !important;
+		  font-size: 14px !important;
+		  transition: all 0.3s ease !important;
+		}
+		
+		.btn-outline-danger:hover {
+		  background: #f5576c !important;
+		  color: #ffffff !important;
+		  transform: translateY(-2px) !important;
+		}
+		
+		/* 회원 목록 헤더 */
+		.d-flex.justify-content-between {
+		  margin-bottom: 20px !important;
+		  padding: 16px 0 !important;
+		  border-bottom: 2px solid rgba(102, 126, 234, 0.15) !important;
+		}
+		
+		.fw-semibold {
+		  font-size: 18px !important;
+		  font-weight: 600 !important;
+		  color: #2d3748 !important;
+		}
+		
+		/* 테이블 스타일 */
+		.table {
+		  background: #ffffff !important;
+		  border-radius: 12px !important;
+		  overflow: hidden !important;
+		  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04) !important;
+		  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+		}
+		
+		.table thead {
+		  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+		}
+		
+		.table thead th {
+		  font-size: 13px !important;
+		  font-weight: 600 !important;
+		  color: #4a5568 !important;
+		  text-transform: uppercase !important;
+		  letter-spacing: 0.5px !important;
+		  padding: 16px 12px !important;
+		  border: none !important;
+		  vertical-align: middle !important;
+		}
+		
+		.table tbody tr {
+		  transition: all 0.2s ease !important;
+		  border-bottom: 1px solid rgba(0, 0, 0, 0.04) !important;
+		}
+		
+		.table tbody tr:hover {
+		  background: rgba(102, 126, 234, 0.03) !important;
+		  transform: scale(1.005) !important;
+		}
+		
+		.table tbody tr:last-child {
+		  border-bottom: none !important;
+		}
+		
+		.table tbody td {
+		  padding: 14px 12px !important;
+		  font-size: 14px !important;
+		  color: #4a5568 !important;
+		  vertical-align: middle !important;
+		  border: none !important;
+		}
+		
+		.table tbody td:first-child {
+		  padding-left: 20px !important;
+		}
+		
+		/* 관리 헤더 오른쪽 정렬 */
+		.table thead th:nth-child(10) {
+		  text-align: right !important;
+		  padding-right: 80px !important;
+		}
+		
+		
+		
+		/* 체크박스 스타일 */
+		input[type="checkbox"] {
+		  width: 18px !important;
+		  height: 18px !important;
+		  cursor: pointer !important;
+		  accent-color: #667eea !important;
+		}
+		
+		/* 관리 버튼 그룹 */
+		.btn-action-group {
+		  display: flex !important;
+		  gap: 6px !important;
+		  justify-content: center !important;
+		}
+		
+		.btn-action-edit {
+		  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+		  border: none !important;
+		  color: #ffffff !important;
+		  border-radius: 6px !important;
+		  padding: 6px 12px !important;
+		  font-size: 13px !important;
+		  font-weight: 600 !important;
+		  transition: all 0.3s ease !important;
+		}
+		
+		.btn-action-edit:hover {
+		  transform: translateY(-2px) !important;
+		  box-shadow: 0 4px 12px rgba(79, 172, 254, 0.4) !important;
+		}
+		
+		.btn-action-delete {
+		  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
+		  border: none !important;
+		  color: #ffffff !important;
+		  border-radius: 6px !important;
+		  padding: 6px 12px !important;
+		  font-size: 13px !important;
+		  font-weight: 600 !important;
+		  transition: all 0.3s ease !important;
+		}
+		
+		.btn-action-delete:hover {
+		  transform: translateY(-2px) !important;
+		  box-shadow: 0 4px 12px rgba(245, 87, 108, 0.4) !important;
+		}
+		
+		/* 페이지네이션 스타일 */
+		.card-footer {
+		  background: transparent !important;
+		  border: none !important;
+		  padding: 24px 0 !important;
+		}
+		
+		.pagination {
+		  gap: 6px !important;
+		}
+		
+		.page-item .page-link {
+		  border: 2px solid rgba(102, 126, 234, 0.2) !important;
+		  color: #667eea !important;
+		  border-radius: 8px !important;
+		  padding: 8px 14px !important;
+		  font-weight: 600 !important;
+		  transition: all 0.3s ease !important;
+		  margin: 0 !important;
+		}
+		
+		.page-item .page-link:hover {
+		  background: rgba(102, 126, 234, 0.1) !important;
+		  border-color: #667eea !important;
+		  transform: translateY(-2px) !important;
+		}
+		
+		.page-item.active .page-link {
+		  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+		  border-color: #667eea !important;
+		  color: #ffffff !important;
+		  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3) !important;
+		}
+		
+		/* 애니메이션 효과 */
+		@keyframes fadeInUp {
+		  from {
+		    opacity: 0;
+		    transform: translateY(20px);
+		  }
+		  to {
+		    opacity: 1;
+		    transform: translateY(0);
+		  }
+		}
+		
+		.card-primary {
+		  animation: fadeInUp 0.5s ease !important;
+		}
+		
+		.table tbody tr {
+		  animation: fadeInUp 0.6s ease !important;
+		}
+		
+		.table tbody tr:nth-child(1) { animation-delay: 0.05s !important; }
+		.table tbody tr:nth-child(2) { animation-delay: 0.1s !important; }
+		.table tbody tr:nth-child(3) { animation-delay: 0.15s !important; }
+		.table tbody tr:nth-child(4) { animation-delay: 0.2s !important; }
+		.table tbody tr:nth-child(5) { animation-delay: 0.25s !important; }
+		
+		
+		/* Select 드롭다운 화살표 스타일 개선 */
+		select.form-control {
+		  appearance: none !important;
+		  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23667eea' d='M6 9L1 4h10z'/%3E%3C/svg%3E") !important;
+		  background-repeat: no-repeat !important;
+		  background-position: right 12px center !important;
+		  padding-right: 36px !important;
+		  
+		}
+</style>
 </th:block>
 
 <th:block layout:fragment="content">
+</th:block>
 
+<th:block layout:fragment="content">
 <div class="container mt-5">
   <div class="row">
     <div class="col">
@@ -81,11 +338,9 @@
 
         <div class="card-body">
           <!-- 검색 폼 -->
-          <form action="/admin/member/member_list" method="get">
-            
-            <!-- 회원검색 -->
+          <form action="/admin/member/member_list" method="get" class="mb-4">
             <div class="row mb-3">
-              <div class="col-2">회원검색</div>
+              <div class="col-2 fw-bold">회원검색</div>
               <div class="col-2">
                 <select name="searchType" class="form-control">
                   <option selected>검색종류 선택</option>
@@ -100,9 +355,8 @@
               </div>
             </div>
 
-            <!-- 성별 -->
             <div class="row mb-3">
-              <div class="col-2">성별</div>
+              <div class="col-2 fw-bold">성별</div>
               <div class="col-2">
                 <select name="genderType" class="form-control">
                   <option selected>성별</option>
@@ -112,19 +366,18 @@
               </div>
             </div>
 
-            <!-- 날짜 -->
-            <div class="row mb-3">
-              <div class="col-2">날짜</div>
+            <div class="row mb-3 align-items-center">
+              <div class="col-2 fw-bold">날짜</div>
               <div class="col-2">
                 <select name="period" class="form-control">
                   <option selected>날짜</option>
-                  <option value="join_date" th:selected="${'mbsp_datesub'} == ${mbsp_datesub}">가입일</option>
-                  <option value="login_date" th:selected="${'mbsp_lastlogin'} == ${mbsp_lastlogin}">최근접속일</option>
+                  <option value="join_date">가입일</option>
+                  <option value="login_date">최근접속일</option>
                 </select>
               </div>
               <div class="col-3 d-flex gap-2">
-                <input type="date" name="start_date" id="start_date" th:value="${start_date}">
-                <input type="date" name="end_date" id="end_date" th:value="${end_date}">
+                <input type="date" name="start_date" id="start_date" class="form-control">
+                <input type="date" name="end_date" id="end_date" class="form-control">
               </div>
               <div class="col-5 d-flex gap-2">
                 <button type="button" class="btn btn-sm btn-outline-info" onclick="setDateRange('today')">오늘</button>
@@ -133,66 +386,59 @@
               </div>
             </div>
 
-            <!-- 검색 버튼 -->
-            <div class="row mt-3">
-              <div class="col text-center">
-                <button type="submit" class="btn btn-primary">검색</button>
-                <button type="button" class="btn btn-outline-primary" id="btn_search_init">초기화</button>
-              </div>
+            <div class="text-center mt-4">
+              <button type="submit" class="btn btn-primary px-4">검색</button>
+              <button type="button" class="btn btn-outline-primary px-4" id="btn_search_init">초기화</button>
             </div>
           </form>
 
-          <!-- 선택 삭제 -->
-          <div class="row mt-4">
-            <div class="col">
-              <button type="button" class="btn btn-outline-danger" id="btn_sel_delete_1">선택삭제</button>
-            </div>
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-semibold mb-0">회원 목록</h5>
+            <button type="button" class="btn btn-outline-danger" id="btn_sel_delete_1">선택삭제</button>
           </div>
 
-          <!-- 회원 리스트 -->
-          <div class="row mt-3">
-            <div class="col">
-              <form name="frm_member_list" id="frm_member_list" method="post" action="/admin/member/pro_sel_delete_2">
-                <table class="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th style="width: 5%"><input type="checkbox" id="checkAll"></th>
-                      <th style="width: 10%">회원명</th>
-                      <th style="width: 5%">성별</th>
-                      <th style="width: 10%">아이디</th>
-                      <th style="width: 10%">최근로그인</th>
-                      <th style="width: 10%">연락처</th>
-                      <th style="width: 10%">메일주소</th>
-                      <th style="width: 10%">가입일시</th>
-                      <th style="width: 5%">포인트</th>
-                      <th style="width: 10%">관리</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr th:each="MemberDTO : ${member_list}">
-                      <td><input type="checkbox" name="check" th:value="${MemberDTO.mbsp_id}"></td>
-                      <td>[[${MemberDTO.mbsp_name}]]</td>
-                      <td>[[${MemberDTO.mbsp_gender}]]</td>
-                      <td>[[${MemberDTO.mbsp_id}]]</td>
-                      <td>[[${#dates.format(MemberDTO.mbsp_lastlogin, 'yyyy-MM-dd HH:mm:ss')}]]</td>
-                      <td>[[${MemberDTO.mbsp_phone}]]</td>
-                      <td>[[${MemberDTO.mbsp_email}]]</td>
-                      <td>[[${#dates.format(MemberDTO.mbsp_datesub, 'yyyy-MM-dd HH:mm:ss')}]]</td>
-                      <td>[[${MemberDTO.mbsp_point}]]</td>
-						<td>
-						  <div class="btn-action-group">
-						    <button type="button" class="btn btn-sm btn-action-edit" 
-						            th:data-mbsp_id="${MemberDTO.mbsp_id}" name="btn_member_edit">수정</button>
-						    <button type="button" class="btn btn-sm btn-action-delete" 
-						            th:data-mbsp_id="${MemberDTO.mbsp_id}" name="btn_member_del">삭제</button>
-						  </div>
-						</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </form>
-
-              <!-- 페이징 hidden form -->
+          <!-- 회원 리스트 테이블 -->
+          <form name="frm_member_list" id="frm_member_list" method="post" action="/admin/member/pro_sel_delete_2">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th><input type="checkbox" id="checkAll"></th>
+                  <th>회원명</th>
+                  <th>성별</th>
+                  <th>아이디</th>
+                  <th>최근로그인</th>
+                  <th>연락처</th>
+                  <th>메일주소</th>
+                  <th>가입일시</th>
+                  <th>포인트</th>
+                  <th>관리</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="MemberDTO : ${member_list}">
+                  <td><input type="checkbox" name="check" th:value="${MemberDTO.mbsp_id}"></td>
+                  <td>[[${MemberDTO.mbsp_name}]]</td>
+                  <td>[[${MemberDTO.mbsp_gender}]]</td>
+                  <td>[[${MemberDTO.mbsp_id}]]</td>
+                  <td>[[${#dates.format(MemberDTO.mbsp_lastlogin, 'yyyy-MM-dd HH:mm:ss')}]]</td>
+                  <td>[[${MemberDTO.mbsp_phone}]]</td>
+                  <td>[[${MemberDTO.mbsp_email}]]</td>
+                  <td>[[${#dates.format(MemberDTO.mbsp_datesub, 'yyyy-MM-dd HH:mm:ss')}]]</td>
+                  <td>[[${MemberDTO.mbsp_point}]]</td>
+                  <td>
+                    <div class="btn-action-group d-flex gap-1">
+                      <button type="button" class="btn btn-sm btn-action-edit"
+                        th:data-mbsp_id="${MemberDTO.mbsp_id}" name="btn_member_edit">수정</button>
+                      <button type="button" class="btn btn-sm btn-action-delete"
+                        th:data-mbsp_id="${MemberDTO.mbsp_id}" name="btn_member_del">삭제</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </form>
+          
+          <!-- 페이징 hidden form -->
               <form id="criteriaForm" action="" method="get">
                 <input type="hidden" name="page" id="page" th:value="${pageMaker.cri.page}" />
                 <input type="hidden" name="perPageNum" id="perPageNum" th:value="${pageMaker.cri.perPageNum}" />
@@ -208,33 +454,33 @@
           </div>
         </div>
 
-        <!-- 페이징 -->
-        <div class="card-footer clearfix">
-          <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-center">
-              <th:block th:if="${pageMaker.prev}">
-                <li class="page-item">
-                  <a class="page-link movepage" th:href="${pageMaker.startPage - 1}">Previous</a>
-                </li>
-              </th:block>
-              <th:block th:each="num : ${#numbers.sequence(pageMaker.startPage, pageMaker.endPage)}">
-                <li class="page-item" th:classappend="${pageMaker.cri.page == num ? 'active' : ''}">
-                  <a class="page-link movepage" th:href="${num}" th:text="${num}"></a>
-                </li>
-              </th:block>
-              <th:block th:if="${pageMaker.next}">
-                <li class="page-item">
-                  <a class="page-link movepage" th:href="${pageMaker.endPage + 1}">Next</a>
-                </li>
-              </th:block>
-            </ul>
-          </nav>
+          <!-- 페이징 -->
+          <div class="card-footer clearfix text-center">
+            <nav aria-label="Page navigation example">
+              <ul class="pagination justify-content-center">
+                <th:block th:if="${pageMaker.prev}">
+                  <li class="page-item">
+                    <a class="page-link movepage" th:href="${pageMaker.startPage - 1}">Previous</a>
+                  </li>
+                </th:block>
+                <th:block th:each="num : ${#numbers.sequence(pageMaker.startPage, pageMaker.endPage)}">
+                  <li class="page-item" th:classappend="${pageMaker.cri.page == num ? 'active' : ''}">
+                    <a class="page-link movepage" th:href="${num}" th:text="${num}"></a>
+                  </li>
+                </th:block>
+                <th:block th:if="${pageMaker.next}">
+                  <li class="page-item">
+                    <a class="page-link movepage" th:href="${pageMaker.endPage + 1}">Next</a>
+                  </li>
+                </th:block>
+              </ul>
+            </nav>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-
 </th:block>
 
 <th:block layout:fragment="script2">
@@ -242,56 +488,38 @@
 		$(document).ready(function() {
 
 			// 제목행 checkbox 클릭. id="checkAll"
-			let isCheck = true; //
+			let isCheck = true;
 			$("#checkAll").on("click", function() {
-				// console.log("제목행 체크박스");
-				// this.checked : 제목행의 체크박스 상태
-				// 데이터행의 모든 체크박스 상태를 제목행의 체크상태로 적용
 				$("input[name='check']").prop("checked", this.checked);
 				isCheck = this.checked;
 			});
 
 			// 데이터행 checkbox 클릭
 			$("input[name='check']").on("click", function() {
-				// 데이터행의 체크박스가 클릭이되면, 제목행 체크박스 상태를 데이타행의 체크박스 상태로 설정.
 				$("#checkAll").prop("checked", this.checked);
 
-				// 데이터행 checkbox가 모두 선택되어 있는 경우 제목행 체크박스 선택
-				//                    하나라도 선택되어 있지 않는 경우 제목행 체크박스 선택해제
 				$("input[name='check']").each(function() {
-					if (!$(this).is(":checked")) { // 데이터행이 체크가 안되어있는 경우 제목행 체크상태를 해제
+					if (!$(this).is(":checked")) {
 						$("#checkAll").prop("checked", false);
 					}
 				});
 			});
-
-			/*
-					1)location.href = "url주소" : 단일삭제
-					2)<form>태그사용
-					3)jquery ajax지원메서드 사용
-			*/
 
 			// 1)ajax용. 선택삭제1 클릭. id="btn_sel_delete"
 			$("#btn_sel_delete_1").on("click", function() {
 
 				if (!confirm("선택하신 회원을 삭제하겠습니까?")) return;
 
-				//console.log("선택삭제");
 				if ($("input[name='check']:checked").length == 0) {
 					alert("삭제 할 회원을 체크하세요.");
 					return;
 				}
 
-
-				// 체크된 회원의 아이디 확인
 				let pro_num_arr = [];
 				$("input[name='check']:checked").each(function() {
 					pro_num_arr.push($(this).val());
 				});
 
-				//console.log("선택상품코드", pro_num_arr);
-
-				// 스프링부트 주소 호출.
 				$.ajax({
 					url: '/admin/product/pro_sel_delete_1',
 					type: 'post',
@@ -306,13 +534,9 @@
 						}
 					}
 				});
-
-
 			});
 
-			// id="criteriaForm"
 			let criteriaForm = $("#criteriaForm");
-
 
 			// 삭제버튼클릭. name="btn_member_del"
 			$("button[name='btn_member_del']").on("click", function() {
@@ -321,12 +545,10 @@
 
 				let mbsp_id = $(this).data("mbsp_id");
 
-				// <form id="criteriaForm"> 사용
 				$("#mbsp_id").val(mbsp_id);
 
 				criteriaForm.attr("method", "get");
 				criteriaForm.attr("action", "/admin/member/member_delete");
-				// 아래 구문을 주석을 걸고, 브라우저에서 criteriaForm 폼의 내용이 변경되는 것을 확인하고, 전송작업
 				criteriaForm.submit();
 			});
 
@@ -343,24 +565,18 @@
 				criteriaForm.submit();
 			});
 
-
-
 			// 회원 수정버튼 클릭 name="btn_member_edit"
 			$("button[name='btn_member_edit']").on("click", function() {
 
 				let mbsp_id = $(this).data("mbsp_id");
-
-				// <form id="criteriaForm"> 사용
+				
 				$("#mbsp_id").val(mbsp_id);
 
 				criteriaForm.attr("method", "get");
 				criteriaForm.attr("action", "/admin/member/member_edit")
 
-				// 아래 구문을 주석을 걸고, 브라우저에서 criteriaForm 폼의 내용이 변경되는 것을 확인하고, 전송작업
 				criteriaForm.submit();
-
 			});
-
 
 			// 초기화 버튼 클릭 이벤트 리스너 추가
 			document.getElementById('btn_search_init').addEventListener('click', () => {
