@@ -3,12 +3,247 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{admin/layouts/ad_layout}">
 
-<th:block layout:fragment="css">
-
+<th:block layout:fragment="style1">
+	<style>
+	/* 페이지 제목 스타일 */
+	h2.text-center {
+		font-size: 24px !important;
+		font-weight: 600 !important;
+		color: #2d3748 !important;
+		margin-bottom: 32px !important;
+	}
+	
+	/* 카드 스타일 */
+	.card-info {
+		border: none !important;
+		border-radius: 16px !important;
+		box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04) !important;
+		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+		background: linear-gradient(135deg, #fdfbfb 0%, #f6f9fc 100%) !important;
+		overflow: hidden !important;
+		position: relative !important;
+		animation: fadeInUp 0.5s ease !important;
+	}
+	
+	.card-info::before {
+		content: '' !important;
+		position: absolute !important;
+		top: 0 !important;
+		left: 0 !important;
+		right: 0 !important;
+		height: 4px !important;
+		background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%) !important;
+	}
+	
+	.card-header {
+		background: transparent !important;
+		border-bottom: 2px solid rgba(79, 172, 254, 0.15) !important;
+		padding: 24px 20px !important;
+	}
+	
+	.card-title {
+		font-size: 20px !important;
+		font-weight: 600 !important;
+		color: #2d3748 !important;
+		margin: 0 !important;
+	}
+	
+	.card-body {
+		padding: 32px 24px !important;
+		background: transparent !important;
+	}
+	
+	/* 폼 라벨 스타일 */
+	.form-label {
+		font-size: 14px !important;
+		font-weight: 600 !important;
+		color: #4a5568 !important;
+		margin-bottom: 8px !important;
+	}
+	
+	/* 입력 필드 스타일 */
+	.form-control {
+		border: 1px solid rgba(79, 172, 254, 0.2) !important;
+		border-radius: 8px !important;
+		padding: 10px 14px !important;
+		font-size: 14px !important;
+		transition: all 0.3s ease !important;
+		background: #ffffff !important;
+		color: #4a5568 !important;
+	}
+	
+	.form-control:focus {
+		border-color: #4facfe !important;
+		box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1) !important;
+		outline: none !important;
+	}
+	
+	.form-control:read-only,
+	.form-control[readonly] {
+		background: #f8f9fa !important;
+		color: #718096 !important;
+		cursor: not-allowed !important;
+	}
+	
+	.form-control-plaintext {
+		padding: 10px 14px !important;
+		background: #f8f9fa !important;
+		border-radius: 8px !important;
+		font-size: 14px !important;
+		color: #4a5568 !important;
+	}
+	
+	/* 체크박스 스타일 */
+	.form-check-input {
+		width: 20px !important;
+		height: 20px !important;
+		cursor: pointer !important;
+		accent-color: #4facfe !important;
+		border: 2px solid rgba(79, 172, 254, 0.3) !important;
+		border-radius: 4px !important;
+	}
+	
+	.form-check-label {
+		font-size: 14px !important;
+		color: #4a5568 !important;
+		cursor: pointer !important;
+		margin-left: 8px !important;
+		font-weight: 500 !important;
+	}
+	
+	.form-check {
+		display: flex !important;
+		align-items: center !important;
+	}
+	
+	/* 버튼 스타일 */
+	.btn {
+		border-radius: 8px !important;
+		padding: 10px 24px !important;
+		font-weight: 500 !important;
+		transition: all 0.3s ease !important;
+		border: none !important;
+		font-size: 14px !important;
+	}
+	
+	.btn-info {
+		background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+		color: #ffffff !important;
+		box-shadow: 0 4px 12px rgba(79, 172, 254, 0.3) !important;
+	}
+	
+	.btn-info:hover {
+		transform: translateY(-2px) !important;
+		box-shadow: 0 6px 16px rgba(79, 172, 254, 0.4) !important;
+	}
+	
+	.btn-outline-primary {
+		border: 2px solid #667eea !important;
+		color: #667eea !important;
+		background: transparent !important;
+	}
+	
+	.btn-outline-primary:hover {
+		background: #667eea !important;
+		color: #ffffff !important;
+		transform: translateY(-2px) !important;
+	}
+	
+	.btn-default {
+		background: #e2e8f0 !important;
+		color: #4a5568 !important;
+		border: none !important;
+	}
+	
+	.btn-default:hover {
+		background: #cbd5e0 !important;
+		transform: translateY(-2px) !important;
+	}
+	
+	/* 카드 푸터 스타일 */
+	.card-footer {
+		background: transparent !important;
+		border-top: 1px solid rgba(0, 0, 0, 0.05) !important;
+		padding: 24px !important;
+	}
+	
+	.card-footer.text-center {
+		display: flex !important;
+		justify-content: center !important;
+		gap: 12px !important;
+	}
+	
+	/* 행 간격 조정 */
+	.row.mb-3 {
+		margin-bottom: 20px !important;
+	}
+	
+	/* 정렬 스타일 */
+	.align-self-end {
+		display: flex !important;
+		align-items: flex-end !important;
+	}
+	
+	/* 우편번호 레이어 스타일 */
+	#layer {
+		border-radius: 12px !important;
+		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15) !important;
+		overflow: hidden !important;
+	}
+	
+	#btnCloseLayer {
+		background: #ffffff !important;
+		border-radius: 50% !important;
+		padding: 4px !important;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+		transition: all 0.3s ease !important;
+	}
+	
+	#btnCloseLayer:hover {
+		transform: scale(1.1) !important;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+	}
+	
+	/* 컨테이너 여백 */
+	.mt-4 {
+		margin-top: 32px !important;
+	}
+	
+	.mb-4 {
+		margin-bottom: 32px !important;
+	}
+	
+	/* 애니메이션 */
+	@keyframes fadeInUp {
+		from {
+			opacity: 0;
+			transform: translateY(20px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+	
+	/* 반응형 디자인 */
+	@media (max-width: 768px) {
+		.card-body {
+			padding: 20px 16px !important;
+		}
+		
+		.card-footer.text-center {
+			flex-direction: column !important;
+		}
+		
+		.btn {
+			width: 100% !important;
+		}
+	}
+	</style>
 </th:block>
 
+
 <th:block layout:fragment="content">
-<h2 class="mt-4 mb-4 text-center">회원 정보 수정</h2>
 
 <div class="row justify-content-center">
     <div class="col-md-10">
