@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import com.coreflow.shop.common.dto.MemberDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -141,6 +142,15 @@ public class KakaoLoginService {
 	public KakaoLoginDto kakaoOne(KakaoLoginDto dto) {
 		return dao.kakaoOne(dto);
 	};
+	
+	// 카카오 로그인 확인
+    public MemberDTO findMemberByEmail(String email) {
+        return dao.findMemberByEmail(email);
+    }
+    
+    public void insertKakaoMember(MemberDTO member) {
+        dao.insertKakaoMember(member);
+    }
 	
 	// 회원등록
 	public int kakaoInsert(KakaoLoginDto dto) {

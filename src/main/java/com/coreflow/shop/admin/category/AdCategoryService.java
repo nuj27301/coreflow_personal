@@ -3,6 +3,7 @@ package com.coreflow.shop.admin.category;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.coreflow.shop.common.dto.CategoryDTO;
 
@@ -19,28 +20,50 @@ import lombok.RequiredArgsConstructor;
 public class AdCategoryService {
     private final AdCategoryMapper adCategoryMapper;
    
-   //  첫번째 카테고리    
-    public List<CategoryDTO> getFirstList(){
-    	return adCategoryMapper.firstList();
-    }    
-    
-    
-    //CATE_PRTCODE
-    //두번째 카테고리 1차카테고리를 참조
-    public List<CategoryDTO> secondList(Integer cate_prtcode){
-    	return adCategoryMapper.getSecondList(cate_prtcode);
+  //1차 관리자 카테고리 
+    public List<CategoryDTO>FirstCategorystList() {
+    	return adCategoryMapper.FirstCategorystList();
     }
 
-    
-    //상품수정 폼에서 사용할 성택한 1차 카테고리 리스트들
-	public CategoryDTO getFirstCategoryBySecondCategory(int secondCategory) {
-		
-		return adCategoryMapper.getFirstCategoryBySecondCategory(secondCategory);
+	public List<CategoryDTO> SecondCategoryList(Integer firstCategoryNum){
+		return adCategoryMapper.SecondCategoryList(firstCategoryNum);
 	}
 
-
+	@Transactional
+	public void arrayCategory(List<Integer> orderArr) {
+		for(int i=0; i<orderArr.size(); i++) {
+			Integer cate_code = orderArr.get(i);
+			Integer order = (i + 1);
+			adCategoryMapper.arrayCategory(cate_code, order);
+		}
+		}
+		public void inputFirstCategory(String cate_name) {
+			adCategoryMapper.inputFirstCategory(cate_name);
+		}
 	
+		public void modifyFirstCategory(CategoryDTO dto) {
+			adCategoryMapper.modifyFirstCategory(dto);
+		}
+		
+		public void addSecondCategory(CategoryDTO dto) {
+			adCategoryMapper.plusSecondCategory(dto);
+		}
+		
+		public void secondModifyCategory(CategoryDTO dto) {
+			adCategoryMapper.modifyFirstCategory(dto);
+		}
+		
+		public void deleteModifyCategory(Integer cate_code) {
+			adCategoryMapper.deleteModifyCategory(cate_code);
+		}  
+		
+	    /*2차 카테고리 코드로 1차 카테고리 찾기 */
+	    public CategoryDTO gCSecondCategory(int secondCategory) {
+	        return adCategoryMapper.gCSecondCategory(secondCategory);
+	    }
 
-	
-    
+	    /*1차 카테고리 코드로 2차 목록 조회 */
+	    public List<CategoryDTO> secondplusList(int firstCategory) {
+	        return adCategoryMapper.secondplusList(firstCategory);
+	    }
 }

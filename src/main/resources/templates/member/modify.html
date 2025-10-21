@@ -100,18 +100,20 @@
 </head>
 
 <th:block layout:fragment="content">
-  <div class="row">
-    <div class="col text-center mb-4 mt-3">
-      <h2 class="fw-bold">USER INFORMATION</h2>
-      <p class="text-muted">Update your account details</p>
+  <div class="row mt-5">
+  
+  <!-- 메뉴 -->
+    <div class="col-2">
+      <th:block th:replace="~{member/mypage_menu::menu}"></th:block>
     </div>
-  </div>
+    
+    <div class="col-10">
+      <h2 class="mt-4 mb-4 text-center">USER INFORMATION</h2>
+      <p class="text-muted text-center">Update your account details</p>
 
-  <div class="row justify-content-center">
-    <div class="col-md-10">
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title">회원 정보</h3>
+          <h3 class="card-title mb-0">회원 정보</h3>
         </div>
 
         <form id="modifyForm" action="/member/modify" method="post">
@@ -228,7 +230,9 @@
     <div id="layer" style="display:none;position:fixed;overflow:hidden;z-index:1;-webkit-overflow-scrolling:touch;">
     <img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnCloseLayer" style="cursor:pointer;position:absolute;right:-3px;top:-3px;z-index:1" onclick="closeDaumPostcode()" alt="닫기 버튼">
     </div>
-    
+</th:block>
+
+<th:block layout:fragment="script2">    
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script>
     // 우편번호 찾기 화면을 넣을 element

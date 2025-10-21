@@ -3,25 +3,40 @@ package com.coreflow.shop.admin.category;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.coreflow.shop.common.dto.CategoryDTO;
 
-//@Mapper
+@Mapper
 public interface AdCategoryMapper {
-   // 1차 카테고리  
-	List<CategoryDTO> firstList();
+   // 1차 관라자 카테고리 목록 
+	List<CategoryDTO>FirstCategorystList(); 
+	List<CategoryDTO>SecondCategoryList(Integer firstCategoryNum);
+	// 1차카테고리 정렬
+	void arrayCategory(@Param("cate_code") Integer cate_code, @Param("order") Integer order );
 	
-	//2차 카테고리 
-    List<CategoryDTO> getSecondList(Integer cate_prtcode);  // secondList(Integer CATE_PRTCODE) xml의 secondList의 1차 카테고리를 참조
+	// 1차카테고리 등록
+	void inputFirstCategory(String cate_name);
 	
-    //메서드 secondCategory를  부모롷 하는 것을 getFirstCategoryBySecondCategory로 찼는다 어디서 xml에서 
-	CategoryDTO getFirstCategoryBySecondCategory(int secondCategory);
+	// 1차카테고리 수정
+	void modifyFirstCategory(CategoryDTO dto);
+	
+	// 2차카테고리 등록
+	void plusSecondCategory(CategoryDTO dto);
+	
+	// 1차, 2차카테고리 삭제
+	void deleteModifyCategory(Integer cate_code);
+    
+	void SecondModifyCategory(CategoryDTO dto);// 2차 카테고리 수정  
+	
+	/*  2차 카테고리 코드로 1차 카테고리 찾기 */
+    CategoryDTO gCSecondCategory(int secondCategory);
 
-	
-   
+    /*  1차 카테고리 코드로 2차 카테고리 목록 조회 */
+    List<CategoryDTO> secondplusList(int firstCategory);
+    
 }
 
 
 
 
-//findAll(): 메서드 테이블에 있는 모든 데이터를 SELECT 해서 리스트(List)로 가져오는 기능
