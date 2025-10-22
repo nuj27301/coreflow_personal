@@ -11,7 +11,7 @@ import com.coreflow.shop.common.dto.CategoryDTO;
 public interface AdCategoryMapper {
    // 1차 관라자 카테고리 목록 
 	List<CategoryDTO>FirstCategorystList(); 
-	List<CategoryDTO>SecondCategoryList(Integer firstCategoryNum);
+	List<CategoryDTO>SecondCategoryList(Integer firstCategoryCode);
 	// 1차카테고리 정렬
 	void arrayCategory(@Param("cate_code") Integer cate_code, @Param("order") Integer order );
 	
@@ -25,7 +25,7 @@ public interface AdCategoryMapper {
 	void plusSecondCategory(CategoryDTO dto);
 	
 	// 1차, 2차카테고리 삭제
-	void deleteModifyCategory(Integer cate_code);
+	void deleteCategory(Integer cate_code);
     
 	void SecondModifyCategory(CategoryDTO dto);// 2차 카테고리 수정  
 	

@@ -74,7 +74,7 @@ public class AdProductController {
   public void pro_insert(Model model) {
 	   
 	   //AdcategoryService
-	   model.addAttribute("cate_list", adCategoryService.getFirstList());
+	   model.addAttribute("cate_list", adCategoryService.FirstCategorystList());
    }
    
    // 상품등록 저장 
@@ -95,7 +95,7 @@ public class AdProductController {
 	 //2)상품정보 DB저장
 	 		adProductService.pro_insert(dto);
 	 		
-	 		return "redirect:/admin/products/pro_list";
+	 		return "redirect:/admin/products/ad_pro_list";
 	   
    }
    
@@ -186,7 +186,7 @@ public class AdProductController {
 		return FileUtils.getFile(uploadPath + File.separator + dateFolderName,fileName);
 	}
    
-	@GetMapping("/pro_list") 
+	@GetMapping("/ad_pro_list") 
 	public String pro_list(@ModelAttribute("cri") SearchCriteria cri,
 			@ModelAttribute("cate_code") String cate_code,
 			@ModelAttribute("start_date") String start_date,
@@ -223,7 +223,7 @@ public class AdProductController {
 		
 		
 		
-		model.addAttribute("cate_list", adCategoryService.getFirstList());
+		model.addAttribute("cate_list", adCategoryService.FirstCategorystList());
 		
 		return "admin/products/ad_pro_list";
 	}
@@ -233,7 +233,7 @@ public class AdProductController {
 	public void pro_edit(@ModelAttribute("cri") SearchCriteria cri, Integer pro_num,Model model) throws Exception {
 		
 		// 1차카테고리들pro_edit_modify
-		model.addAttribute("cate_list",adCategoryService.getFirstList());
+		model.addAttribute("cate_list",adCategoryService.FirstCategorystList());
 		
 		//상품수정
 		ProductDTO productDTO = adProductService.pro_edit_form(pro_num);
@@ -244,7 +244,7 @@ public class AdProductController {
 		int secondCategory = productDTO.getCate_code(); 
 		 
 		// 2차카테고리의 부모인 1차카테고리
-	    CategoryDTO categoryDTO = adCategoryService.getFirstCategoryBySecondCategory(secondCategory);
+	    CategoryDTO categoryDTO = adCategoryService.gCSecondCategory(secondCategory);
 	     
 	     model.addAttribute("categoryDTO", categoryDTO); 
 	     
@@ -252,7 +252,7 @@ public class AdProductController {
 	     
 	     int firstCategory = categoryDTO.getCate_prtcode(); // 지역 변수
 	     
-	     model.addAttribute("secondCategoryDTO",adCategoryService.secondList(firstCategory));
+	     model.addAttribute("secondCategoryDTO",adCategoryService.secondplusList(firstCategory));
 		
 	    
 		
@@ -287,7 +287,7 @@ public class AdProductController {
     	rttr.addAttribute("searchType", cri.getSearchType()); 
     	rttr.addAttribute("keyword",cri.getKeyword());
     	
-		return "redirect:/admin/products/pro_list";
+		return "redirect:/admin/products/ad_pro_list";
 	} 
 	
 	//상품삭제 
@@ -306,7 +306,7 @@ public class AdProductController {
 		rttr.addAttribute("searchType",cri.getSearchType());
 		rttr.addAttribute("keyword",cri.getKeyword()); 
 		
-		return "redirect:/admin/products/pro_list";
+		return "redirect:/admin/products/ad_pro_list";
 //				위 컨트롤러는 /admin/products/pro_delete?pro_num=...&pro_up_folder=...&pro_img=... 
 //				형태로 GET 요청이 들어올 때 실행되며,
 //				상품번호(pro_num)와 이미지경로(pro_up_folder/pro_img)를 파라미터로 받아
@@ -342,7 +342,7 @@ public class AdProductController {
 	   }
 	  
 	   //중복제출방지 실행되지 않게 리다이렉트
-	   return "redirect:/admin/products/pro_list";
+	   return "redirect:/admin/products/ad_pro_list";
 	} 
 			
     //선택상품삭제(폼에서 이름+추가 정보를 DB로직에서 사용)
@@ -354,6 +354,6 @@ public class AdProductController {
 		
 		
 		
-		return "redirect:/adimin/products/pro_list";
+		return "redirect:/adimin/products/ad_pro_list";
 	}
 }

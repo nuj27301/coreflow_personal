@@ -623,7 +623,7 @@
 					let firstCategoryCode = $("#btn_firstCategory").val();
 
 					// 2차카테고리 목록을 가져오는 스프링의 매핑주소
-					let url = "/admin/categories/secondcategory/" + firstCategoryCode;
+					let url = "/admin/category/secondcategory/" + firstCategoryCode;
 
 					$.getJSON(url, function(secondCategoryList) {
 
@@ -713,7 +713,7 @@
 
 					// 스프링부트 주소 호출.
 					$.ajax({
-						url: '/admin/product/pro_sel_delete_1',
+						url: '/admin/products/pro_sel_delete_1',
 						type: 'post',
 						data : {pro_num_arr : pro_num_arr},
 						dataType: 'text',
@@ -789,7 +789,7 @@
 					let page = $(this).attr("href");
 
 					criteriaForm.find("input[name='page']").val(page);
-					criteriaForm.attr("action", "/admin/products/pro_list");
+					criteriaForm.attr("action", "/admin/products/ad_pro_list");
 					criteriaForm.attr("method", "get");
 
 					criteriaForm.submit();

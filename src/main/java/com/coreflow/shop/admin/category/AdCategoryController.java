@@ -60,12 +60,12 @@ public class AdCategoryController {
     
     
     //2차 카테고리목록 
-    @GetMapping("/secondpCategoryList/{firstCategoryNum}")  
+    @GetMapping("/secondCategoryList/{firstCategoryCode}")  
     public ResponseEntity<List<CategoryDTO>>
-      SecondList(@PathVariable("firstCategoryNum") Integer firstCategoryNum) throws Exception{
+      SecondList(@PathVariable("firstCategoryCode") Integer firstCategoryCode) throws Exception{
     	
     	ResponseEntity<List<CategoryDTO>> entity  = null; 
-    	List<CategoryDTO> adCategoryList = adCategoryService.SecondCategoryList(firstCategoryNum); 
+    	List<CategoryDTO> adCategoryList = adCategoryService.SecondCategoryList(firstCategoryCode); 
     	entity = new ResponseEntity<List<CategoryDTO>>(adCategoryList,HttpStatus.OK); 
     	
     	return entity;
@@ -130,11 +130,11 @@ public class AdCategoryController {
  	}
  	
  	// 1차, 2차카테고리 삭제.
- 	@PostMapping("/deleteModifyCategory")
+ 	@PostMapping("/deleteCategory")
  	public ResponseEntity<String> deleteCategory(Integer cate_code) throws Exception {
  		ResponseEntity<String> entity = null;
  		
- 		adCategoryService.deleteModifyCategory(cate_code);
+ 		adCategoryService.deleteCategory(cate_code);
  		entity = new ResponseEntity<String>("success", HttpStatus.OK);
  		
  		return entity;

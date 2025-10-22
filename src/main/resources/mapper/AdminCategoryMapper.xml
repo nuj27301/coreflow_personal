@@ -23,7 +23,7 @@
       cate_prtcode,
       cate_name
     FROM categories
-    WHERE cate_prtcode = #{firstCategoryNum}
+    WHERE cate_prtcode = #{firstCategoryCode}
   </select>
 
   <update id="arrayCategory" parameterType="map">
@@ -58,7 +58,7 @@
     WHERE cate_code = #{cate_code}
   </update>
 
-  <delete id="deleteModifyCategory" parameterType="Integer">
+  <delete id="deleteCategory" parameterType="Integer">
     DELETE FROM categories
     WHERE cate_code = #{cate_code}
   </delete>

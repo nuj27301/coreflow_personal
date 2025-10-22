@@ -230,18 +230,15 @@
 <script>
 $(function(){
 
-	// 1차선택코드
-  	let firstCateCode = $("#sel-main option:selected").val();
-	// 2차선택코드
-  	let secondCateCode = $("#sel-sub option:selected").val();
+
 	
   /* 1차 카테고리 선택 시 2차 불러오기  */
   $("select[name='cate_code']").on("change", function(){
     let current = $(this); 
-    let firstCategoryNum = current.val(); 
+    let firstCategoryCode = current.val(); 
 
     $.ajax({
-      url: '/admin/category/secondpCategoryList/' + firstCategoryNum,
+      url: '/admin/category/secondCategoryList/' + firstCategoryCode,
       type: 'get', 
       dataType: 'json',
       success: function(data) {
@@ -424,7 +421,10 @@ $(function(){
       type: 'get',
       dataType: 'json',
       success: function(data) {
-    	console.log("1차카테고리", data); 
+    	console.log("1차카테고리", data);
+    	
+    	// 1차선택코드
+      	let firstCateCode = $("#sel-main option:selected").val();
     	
         let firstCategoryStr = "";
         for(let i=0; i<data.length; i++) {
@@ -479,6 +479,11 @@ $(function(){
 
   // 2차 수정
   $("#edit-second-category").on("click", function() {
+	  
+	// 1차선택코드
+	let firstCateCode = $("#sel-main option:selected").val();
+	// 2차선택코드
+	let secondCateCode = $("#sel-sub option:selected").val();
     let secondCateName = $("#sel-sub option:selected").html();
 
     if (!firstCateCode || !secondCateCode) {
@@ -569,7 +574,7 @@ $(function(){
       return;    
     }
 
-    let cate_code = $("#sel-sub option:selected").val();
+    let cate_code = $("select#sel-sub option:selected").val();
 
     $.ajax({
       url: '/admin/category/deleteCategory',

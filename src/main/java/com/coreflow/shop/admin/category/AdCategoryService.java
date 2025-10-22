@@ -25,8 +25,8 @@ public class AdCategoryService {
     	return adCategoryMapper.FirstCategorystList();
     }
 
-	public List<CategoryDTO> SecondCategoryList(Integer firstCategoryNum){
-		return adCategoryMapper.SecondCategoryList(firstCategoryNum);
+	public List<CategoryDTO> SecondCategoryList(Integer firstCategoryCode){
+		return adCategoryMapper.SecondCategoryList(firstCategoryCode);
 	}
 
 	@Transactional
@@ -53,8 +53,8 @@ public class AdCategoryService {
 			adCategoryMapper.modifyFirstCategory(dto);
 		}
 		
-		public void deleteModifyCategory(Integer cate_code) {
-			adCategoryMapper.deleteModifyCategory(cate_code);
+		public void deleteCategory(Integer cate_code) {
+			adCategoryMapper.deleteCategory(cate_code);
 		}  
 		
 	    /*2차 카테고리 코드로 1차 카테고리 찾기 */
