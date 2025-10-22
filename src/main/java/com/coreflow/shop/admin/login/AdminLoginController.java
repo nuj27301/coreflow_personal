@@ -35,7 +35,7 @@ public class AdminLoginController {
 		log.info("관리자로그인");
 		
 		
-		return "/admin/ad_login";
+		return "admin/ad_login";
 	}
 	
 	@GetMapping("/login")
