@@ -59,145 +59,139 @@ Coreflowshop은 효율적인 온라인 쇼핑 경험과 관리자 중심의 운�
 ## 🗄️ 데이터베이스 구조
 
 ### 🧑‍💼 admin
-
-- ad\_userid
-- ad\_passwd
-- login\_date
+- ad_userid
+- ad_passwd
+- login_date
 
 ### 🧍 members
-
-- mbsp\_id
-- mbsp\_name
-- mbsp\_email
-- mbsp\_password
-- mbsp\_zipcode
-- mbsp\_address
-- mbsp\_addressdetail
-- mbsp\_phone
-- mbsp\_gender
-- mbsp\_receive
-- mbsp\_birthdate
-- mbsp\_point
-- mbsp\_lastlogin
-- mbsp\_datesub
-- mbsp\_updatedate
+- mbsp_id
+- mbsp_name
+- mbsp_email
+- mbsp_password
+- mbsp_zipcode
+- mbsp_address
+- mbsp_addressdetail
+- mbsp_phone
+- mbsp_gender
+- mbsp_receive
+- mbsp_birthdate
+- mbsp_point
+- mbsp_lastlogin
+- mbsp_datesub
+- mbsp_updatedate
 
 ### 🛒 cart
-
-- pro\_num
-- mbsp\_id
-- cart\_amount
-- cart\_date
+- pro_num
+- mbsp_id
+- cart_amount
+- cart_date
 
 ### 🏷️ categories
-
-- cate\_code
-- cate\_prtcode
-- cate\_name
-- cate\_order
+- cate_code
+- cate_prtcode
+- cate_name
+- cate_order
 
 ### 📜 loginlog
-
-- log\_idx
-- log\_userid
-- log\_accesstime
+- log_idx
+- log_userid
+- log_accesstime
 
 ### 🧾 orders
+- ord_code
+- mbsp_id
+- ord_name
+- ord_addr_zipcode
+- ord_addr_basic
+- ord_addr_detail
+- ord_tel
+- ord_mail
+- ord_price
+- ord_status
+- ord_regdate
+- ord_message
 
-- ord\_code
-- mbsp\_id
-- ord\_name
-- ord\_addr\_zipcode
-- ord\_addr\_basic
-- ord\_addr\_detail
-- ord\_tel
-- ord\_mail
-- ord\_price
-- ord\_status
-- ord\_regdate
-- ord\_message
+### 📦 order_items
+- ord_code
+- pro_num
+- oi_quantity
+- oi_price
 
-### 📦 order\_items
-
-- ord\_code
-- pro\_num
-- oi\_quantity
-- oi\_price
-
-### 🚚 order\_shipping
-
-- delivery\_code
-- ord\_code
-- shipping\_recipient
-- shipping\_phone
-- shipping\_zipcode
-- shipping\_address
-- shipping\_address2
-- delivery\_date
-- delivery\_status
+### 🚚 order_shipping
+- delivery_code
+- ord_code
+- shipping_recipient
+- shipping_phone
+- shipping_zipcode
+- shipping_address
+- shipping_address2
+- delivery_date
+- delivery_status
 
 ### 💳 payment
-
-- payment\_id
-- ord\_code
-- mbsp\_id
-- payment\_method
-- payment\_price
-- payment\_status
-- payment\_date
+- payment_id
+- ord_code
+- mbsp_id
+- payment_method
+- payment_price
+- payment_status
+- payment_date
 
 ### 👕 products
-
-- pro\_num
-- cate\_code
-- pro\_name
-- pro\_price
-- pro\_discount
-- pro\_publisher
-- pro\_summary
-- pro\_up\_folder
-- pro\_img
-- pro\_amount
-- pro\_buy
-- pro\_review
-- pro\_date
-- pro\_updatedate
+- pro_num
+- cate_code
+- pro_name
+- pro_price
+- pro_discount
+- pro_publisher
+- pro_summary
+- pro_up_folder
+- pro_img
+- pro_amount
+- pro_buy
+- pro_review
+- pro_date
+- pro_updatedate
 
 ### 💬 review
+- rev_code
+- mbsp_id
+- pro_num
+- rev_content
+- rev_rate
+- rev_date
 
-- rev\_code
-- mbsp\_id
-- pro\_num
-- rev\_content
-- rev\_rate
-- rev\_date
-
-### 💭 review\_replies
-
-- reply\_id
-- rev\_code
-- manager\_id
-- reply\_text
-- reply\_date
+### 💭 review_replies
+- reply_id
+- rev_code
+- manager_id
+- reply_text
+- reply_date
 
 ---
 
 ## 🛠️ 기술 스택
 
-| 구분               | 사용 기술                                                                                                                   |
-| ---------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| **Frontend**     | HTML, CSS, JavaScript, jQuery, Bootstrap, Thymeleaf                                                                     |
-| **Backend**      | Spring Boot / MyBatis / JAVA                                                                                            |
-| **Database**     | MySQL                                                                                                                   |
-| **API / 외부  연동** | Kakao Login API, KakaoPay API, Daum Postcode API,                                    SMTP (메일 전송),      Gemini Open API |
-| **Server / 배포**  | AWS EC2                                                                                                                 |
-| **Tool**         | SpringToolSuite, DBeaver, VS Code, GitHub                                                                               |
+| 구분              | 사용 기술                                                          |
+| --------------- | -------------------------------------------------------------- |
+| **Frontend**    | HTML, CSS, JavaScript, jQuery, Bootstrap, Thymeleaf            |
+| **Backend**     | Spring Boot / MyBatis / JAVA                                   |
+| **Database**    | MySQL                                                          |
+| **API / 외부 연동** | Kakao Login API, KakaoPay API, Daum Postcode API, SMTP (메일 전송), Gemini Open API |
+| **Server / 배포** | AWS EC2                                                        |
+| **Tool**        | SpringToolSuite, DBeaver, VS Code, GitHub                      |
+
+---
+
+## 👨‍💻 개발자
+- 박용준
+- 이세근
+- 김카타리나
 
 ---
 
 ## 📂 프로젝트 구조
 
-```
 ```
 coreflowshop/  # 패키지별 기능 분류 중심으로 요약
 ├── src/
@@ -206,14 +200,6 @@ coreflowshop/  # 패키지별 기능 분류 중심으로 요약
 │   │   │   ├── CoreFlowShopApplication.java
 │   │   │   ├── HomeController.java
 │   │   │   ├── admin/
-│   │   │   │   ├── category/
-│   │   │   │   ├── login/
-│   │   │   │   ├── member/
-│   │   │   │   ├── order/
-│   │   │   │   ├── payment/
-│   │   │   │   ├── product/
-│   │   │   │   ├── review/
-│   │   │   │   ├── statistics/
 │   │   │   ├── cart/
 │   │   │   ├── category/
 │   │   │   ├── chatbot/
@@ -282,21 +268,9 @@ coreflowshop/  # 패키지별 기능 분류 중심으로 요약
 ├── README.md
 ```
 
-```
-
----
-
-👨‍💻 개발자
-
-- 박용준
-
-- 이세근
-
-- 김카타리나
-
 ---
 
 ## 📜 라이선스
+MIT License
 
-이 프로젝트는 MIT License 하에 배포됩니다.
-
+---
