@@ -1,2 +1,0 @@
-# Coreflowshop
-# coreflow_p
