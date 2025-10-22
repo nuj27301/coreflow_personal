@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coreflow.shop.kakaologin.KakaoLoginDao">
+
+    <!-- 이메일로 회원 조회 -->
+    <select id="findMemberByEmail" resultType="com.coreflow.shop.common.dto.MemberDTO">
+    
+        SELECT 
+            mbsp_id,
+			mbsp_name,
+			mbsp_email,
+			mbsp_password,
+			mbsp_zipcode,
+			mbsp_address,
+			mbsp_addressdetail,
+			mbsp_phone,
+			mbsp_gender,
+			mbsp_receive,
+			mbsp_birthdate
+        FROM members
+        WHERE mbsp_email = #{email}
+        
+    </select>
+
+    <!-- 카카오 회원을 mbsp_member 테이블에 등록 -->
+    <insert id="insertKakaoMember">
+    
+        insert into
+			members
+			(
+			mbsp_id,
+			mbsp_name,
+			mbsp_email,
+			mbsp_password,
+			mbsp_zipcode,
+			mbsp_address,
+			mbsp_addressdetail,
+			mbsp_phone,
+			mbsp_gender,
+			mbsp_receive,
+			mbsp_birthdate
+			)
+		values
+			(
+			#{mbsp_id},
+			#{mbsp_name},
+			#{mbsp_email},
+			#{mbsp_password},
+			#{mbsp_zipcode},
+			#{mbsp_address},
+			#{mbsp_addressdetail},
+			#{mbsp_phone},
+			#{mbsp_gender},
+			#{mbsp_receive},
+			#{mbsp_birthdate}
+			)
+        
+    </insert>
+
+</mapper>

@@ -145,44 +145,54 @@ public class MemberController {
 	// 카카오 로그인 API서버에서 호출받게되는 주소.
 		// 카카오 디벨로퍼 사이트에서 로그인작업을 위하여 미리 설정해둠.
 	@GetMapping(value="/kakao/callback")
-    public String loginKakaoRedirect(KakaoLoginDto dto, MemberDTO mdto, Model model, HttpSession session) throws Exception {
-    	
-		// code 라는 파라미터명으로 토큰요청인가코드를 보내준다.
-		// cIZpq5QRFhTLQKoijLXd3Z4oKJGTveb1kyedVAccWbEb_GJohpQ9vAAAAAQKDRSjAAABmaPlSxNtZc76WqiBKA
-		System.out.println("토큰요청인가코드: "+dto.getCode());
-		
-    	
-    	
-    	// 인증토큰 받기 
-    	String accessToken = kservice.getAccessTokenFromKakao(client_id, dto.getCode(), redirect_uri, client_secret);
-    	
-    	// 카카오서버로부터 개인회원정보 받기
-    	dto = kservice.getUserInfo(accessToken, dto);
-    	
-    	log.info("KakaoLoginDto: " + dto);
-		  
-    	// 회원존재확인
-    		
-		/*
-    	if(kservice.kakaoOne(dto) != null) {
-			//by pass
-		}else {
-			kservice.kakaoInsert(dto);
-		}
-		KakaoLoginDto rtId = kservice.kakaoOne(dto);
-		httpSession.setAttribute("sessNameUsr", rtId.getMemberName());
-		httpSession.setAttribute("sessSeqUsr", rtId.getMemberSeq());
+	public String loginKakaoRedirect(KakaoLoginDto dto, MemberDTO mdto, Model model, HttpSession session) throws Exception {
 
-        model.addAttribute("info", dto);
-        */
-    	
-    	// 카카오 로그인 인증정보저장.
-    	session.setAttribute("kakao_login_auth", dto.getEmail()); // 일반 로그인상태인지 카카오로그인상태인지 구분
-    	session.setAttribute("accessToken", accessToken); // 인증토큰을 카카오 로그아웃에 사용하기위하여 세션으로 저장.
-    	
-        
-        return "redirect:/";
-    }
+	    System.out.println("토큰요청인가코드: "+dto.getCode());
+
+	    // 인증토큰 받기
+	    String accessToken = kservice.getAccessTokenFromKakao(client_id, dto.getCode(), redirect_uri, client_secret);
+
+	    // 카카오서버로부터 개인회원정보 받기
+	    dto = kservice.getUserInfo(accessToken, dto);
+
+	    log.info("KakaoLoginDto: " + dto);
+
+	    // 1. 카카오 이메일로 기존 회원 조회
+	    MemberDTO member = kservice.findMemberByEmail(dto.getEmail());
+	    
+	    // 2. 회원이 없으면 신규 가입 처리
+	    if(member == null) {
+	        member = new MemberDTO();
+	        
+	        // KakaoLoginDto의 정보를 MemberDTO로 변환
+	        member.setMbsp_id("kakao_" + dto.getId());  // dto.getId() 사용
+	        member.setMbsp_email(dto.getEmail());       // dto.getEmail() 사용
+	        member.setMbsp_name(dto.getName());         // dto.getName() 사용
+	        member.setMbsp_password("KAKAO_LOGIN");
+	        member.setMbsp_point(0);
+	        member.setMbsp_receive("Y");
+	        
+	        // 전화번호가 있으면 설정
+	        if(dto.getPhone() != null && !dto.getPhone().isEmpty()) {
+	            member.setMbsp_phone(dto.getPhone());
+	        }
+	        
+	        // DB에 저장
+	        kservice.insertKakaoMember(member);
+	        
+	        // 저장 후 다시 조회
+	        member = kservice.findMemberByEmail(dto.getEmail());
+	    }
+	    
+	    // 3. 세션에 저장 (일반 로그인과 동일한 키 사용!)
+	    session.setAttribute("login_auth", member);
+	    session.setAttribute("kakao_login_auth", dto.getEmail());
+	    session.setAttribute("accessToken", accessToken);
+
+	    log.info("카카오 로그인 성공 - 회원ID: " + member.getMbsp_id());
+
+	    return "redirect:/";
+	}
 	
 	// 로그아웃
 	@GetMapping("/logout")

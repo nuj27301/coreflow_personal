@@ -415,9 +415,9 @@
 				$("#btn_firstCategory").on("change", function() {
 
 				let firstCategoryCode = $("#btn_firstCategory").val(); 
-
-				//2차 카테고리  목록을 가져오는 스프링 매핑주소 id="btn_secondCategory"    /admin/categories/secondcategory/1
-				let url = "/admin/categories/secondcategory/" + firstCategoryCode; 
+				
+				//2차 카테고리  목록을 가져오는 스프링 매핑주소 id="btn_secondCategory"  
+				let url = "/admin/category/secondCategoryList/" + firstCategoryCode; 
 
 				$.getJSON(url, function(secondCategoryList){
 

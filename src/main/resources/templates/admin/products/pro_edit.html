@@ -137,9 +137,9 @@
 					let firstCategoryCode = $("#btn_firstCategory").val();
 
 					// 2차카테고리 목록을 가져오는 스프링의 매핑주소
-					let url = "/admin/categories/secondcategory/" + firstCategoryCode; 
+					let url = "/admin/category/secondCategoryList/" + firstCategoryCode; 
 
-					$.getJSON(url, function(secondCategoryList) {
+					$.getJSON(url, function(adCategoryList) {
 
 						// console.log("2차카테고리정보", secondCategoryList);
 
@@ -148,8 +148,8 @@
 
 						let optionStr = "";
 
-						for(let i=0; i<secondCategoryList.length; i++) {
-							optionStr += "<option value='" + secondCategoryList[i].cate_code + "'>" + secondCategoryList[i].cate_name + "</option>";
+						for(let i=0; i<adCategoryList.length; i++) {
+							optionStr += "<option value='" + adCategoryList[i].cate_code + "'>" + adCategoryList[i].cate_name + "</option>";
 						}
 
 						secondCategoryCode.find("option").remove();
