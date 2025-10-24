@@ -3,7 +3,7 @@ os: linux
 
 files:
   - source:  /
-    destination: /home/ec2-user/app1/step1/upload
+    destination: /home/ec2-user/app1/step1/Coreflow
     overwrite: yes
 
 permissions:
