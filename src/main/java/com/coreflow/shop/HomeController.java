@@ -2,6 +2,7 @@ package com.coreflow.shop;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,7 @@ public class HomeController {
 		model.addAttribute("firstCategoryList", firstCategoryList);
 		
 		// 추천상품
-		List<ProductDTO> recommendList = productService.getRecommendList();
+		List<Map<String, Object>> recommendList = productService.getRecommendList();
 		model.addAttribute("recommendList", recommendList);
 		
 		return "index";

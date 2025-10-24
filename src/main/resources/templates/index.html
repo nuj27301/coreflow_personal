@@ -168,9 +168,11 @@
                         <div class="col" th:each="p, subStat : ${recommendList}" th:if="${subStat.index >= stat.index and subStat.index < stat.index + 5}">
                             <div class="card shadow-sm h-100 product-card">
 
+								<a href="#" th:data-pro_num="${p.pro_num}" th:data-cate_name="${p.cate_name}" class="pro_info">
                                 <img th:src="|/product/image_display?dateFolderName=${p.pro_up_folder}&fileName=s_${p.pro_img}|"
                                     class="card-img-top" alt="${p.pro_name}">
-
+								</a>
+								
                                 <div class="card-body d-flex flex-column">
                                     <h5 class="card-title text-truncate fw-bold mb-2" th:text="${p.pro_name}">상품 제목</h5>
                                     <p class="mb-1 fs-5 text-dark fw-semibold">
@@ -221,35 +223,91 @@
 
 <th:block layout:fragment="script2">
 <script th:inline="javascript">
-  $(document).ready(function() {
-
-    $("button[name='btn_cart_add']").on("click", function() {
-      let pro_num = $(this).data("pro_num");
-      let cart_amount = $(this).parents("div.card").find("input[name='quantity']").val();
-
-      $.ajax({
-        url: '/cart/cart_add',
-        type: 'post',
-        data: {pro_num: pro_num, cart_amount: cart_amount},
-        dataType: 'text',
-        success: function(data) {
-          if(data == "success") {
-            alert("장바구니에 등록되었습니다");
-            if(confirm("장바구니로 이동하겠습니까?")) {
-              location.href = "/cart/cart_list";
-            }
-          }
-        }
-      });
-    });
-
-    $("button[name='btn_direct_buy']").on("click", function() {
-      let pro_num = $(this).data("pro_num");
-      let buy_amount = $(this).parents("div.card").find("input[type='number'][name='quantity']").val();
-      location.href = `/order/order_info?pro_num=${pro_num}&cart_amount=${buy_amount}&type=buy`;
-    });
-
-  });
+	$(document).ready(function() {
+	
+	    $("button[name='btn_cart_add']").on("click", function() {
+	      let pro_num = $(this).data("pro_num");
+	      let cart_amount = $(this).parents("div.card").find("input[name='quantity']").val();
+	
+	      $.ajax({
+	        url: '/cart/cart_add',
+	        type: 'post',
+	        headers: {'AJAX': 'true'},
+	        data: {pro_num: pro_num, cart_amount: cart_amount},
+	        dataType: 'json',
+	        success: function(response) {
+	            // 로그인 체크
+	            if(response.needLogin) {
+	                alert(response.message);
+	                location.href = '/member/login';
+	                return;
+	            }
+	            // 성공 처리
+	            if(response.success) {
+	                alert("장바구니에 등록되었습니다");
+	                if(confirm("장바구니로 이동하겠습니까?")) {
+	                    location.href = "/cart/cart_list";
+	                }
+	            }
+	        },
+	        error: function(xhr) {
+	            if(xhr.responseJSON && xhr.responseJSON.needLogin) {
+	                alert(xhr.responseJSON.message);
+	                window.location.href = '/member/login';
+	            } else {
+	                alert('오류가 발생했습니다.');
+	            }
+	        }
+	    });
+	});
+		
+		 // 바로구매 name="btn_direct_buy"
+	    $("button[name='btn_direct_buy']").on("click", function() {
+	      let pro_num = $(this).data("pro_num");
+	      let buy_amount = $(this).parents("div.card").find("input[type='number'][name='quantity']").val();
+	      
+	      $.ajax({
+	          url: '/cart/cart_add',
+	          type: 'post',
+	          headers: {'AJAX': 'true'},
+	          dataType: 'json',
+	          success: function(response) {
+	              // 로그인 체크
+	              if(response.needLogin) {
+	                  alert(response.message);
+	                  location.href = '/member/login';
+	                  return;
+	              }
+	              // 성공 처리
+	              if(response.success) {
+	                  if(confirm("구매페이지로 이동하겠습니까?")) {
+	      				location.href = `/order/order_info?pro_num=${pro_num}&cart_amount=${buy_amount}&type=buy`;
+	                  }
+	              }
+	          },
+	          error: function(xhr) {
+	              if(xhr.responseJSON && xhr.responseJSON.needLogin) {
+	                  alert(xhr.responseJSON.message);
+	                  window.location.href = '/member/login';
+	              } else {
+	                  alert('오류가 발생했습니다.');
+	              }
+	          }
+	      });
+	  });
+	    
+	 	// 상품 이미지 클릭. <a href="#" class="pro_info"> 이미지 </a>
+		$("a.pro_info").on("click", function(e) {
+			e.preventDefault();
+			let pro_num = $(this).data("pro_num");
+			let cate_name = $(this).data("cate_name");
+			
+			location.href = `/product/pro_detail?pro_num=${pro_num}&cate_name=${cate_name}`;
+			
+		});
+	
+	
+	  }); // ready-end event
 </script>
 </th:block>
 

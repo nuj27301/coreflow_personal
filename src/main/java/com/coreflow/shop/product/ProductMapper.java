@@ -1,6 +1,7 @@
 package com.coreflow.shop.product;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -13,7 +14,7 @@ public interface ProductMapper {
 	
 	int getProductListCount(Integer cate_code);
 	
-	List<ProductDTO> getRecommendList();
+	List<Map<String, Object>> getRecommendList();
 	
 	ProductDTO pro_detail(Integer pro_num);
 	

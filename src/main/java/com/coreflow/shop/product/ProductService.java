@@ -1,6 +1,7 @@
 package com.coreflow.shop.product;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class ProductService {
 		return productMapper.getProductListCount(cate_code);
 	}
 	
-	public List<ProductDTO> getRecommendList() {
+	public List<Map<String, Object>> getRecommendList() {
 		return productMapper.getRecommendList();
 	}
 	

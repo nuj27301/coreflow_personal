@@ -25,10 +25,17 @@
 			cate_code = #{cate_code}
 		and
 			pro_buy = 'Y'
+		<include refid="search"></include>
 		limit 
 			#{cri.pageStart}, #{cri.perPageNum}
 	
 	</select>
+	
+	<sql id="search">
+		<if test="cri.searchType != null">
+			and pro_name like concat('%', #{cri.keyword}, '%')
+		</if>
+	</sql>
 	
 	<select id="getProductListCount" resultType="int">
 	
@@ -43,28 +50,34 @@
 	
 	</select>
 	
-	<select id="getRecommendList" resultType="com.coreflow.shop.common.dto.ProductDTO">
+	<select id="getRecommendList" resultType="map">
 	
-    	select 	
-    		pro_num,
-			cate_code,
-			pro_name,
-			pro_price,
-			pro_discount,
-			pro_publisher,
-			pro_summary,
-			pro_up_folder,
-			pro_img,
-			pro_amount,
-			pro_buy,
-			pro_review,
-			pro_date,
-			pro_updatedate 
-    	from 
-    		products
-    	order by 
-    		pro_num desc
-    	limit 15
+    	SELECT 
+		    p.pro_num,
+		    p.cate_code,
+		    c.cate_name,
+		    p.pro_name,
+		    p.pro_price,
+		    p.pro_discount,
+		    p.pro_publisher,
+		    p.pro_summary,
+		    p.pro_up_folder,
+		    p.pro_img,
+		    p.pro_amount,
+		    p.pro_buy,
+		    p.pro_review,
+		    p.pro_date,
+		    p.pro_updatedate
+		FROM 
+		    products p
+		INNER JOIN 
+		    categories c
+		ON 
+		    p.cate_code = c.cate_code
+		ORDER BY 
+		    p.pro_num DESC
+		LIMIT 15
+
     
 	</select>
 	
@@ -111,5 +124,5 @@
 	
 	</select>
 	
-
+	
 </mapper>
