@@ -85,13 +85,13 @@
         Handlebars.registerHelper("authControlView", function(mbsp_id, rev_code) {
 
           // 세션 로그인 정보 가져오기 (널 안전처리 )
-          let memberDTO = [[${session.login_auth}]];     
+        let memberDTO = [[${session.login_auth}]];
 
-          let loginId = /*[[${session.login_auth != null} ? '${session.login_auth.mbsp_id}' : '']]*/ "";
-
-          if(memberDTO !== null) {
-            loginId = [[${session.login_auth.mbsp_id}]];
-          }
+        let loginId = "";
+        
+        if(memberDTO !== null) { // 로그인 상태이면
+          loginId = [[${session.login_auth == null? '' : session.login_auth.mbsp_id}]];
+        }
 
           let str = "";
           if(memberDTO !== null && loginId == mbsp_id) {

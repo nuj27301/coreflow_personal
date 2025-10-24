@@ -240,18 +240,34 @@
       $.ajax({
         url: '/cart/cart_add',
         type: 'post',
+        headers: {'AJAX': 'true'},
         data: {pro_num: pro_num, cart_amount: cart_amount},
-        dataType: 'text',
-        success: function(data) {
-          if(data == "success") {
-            alert("장바구니에 등록되었습니다");
-            if(confirm("장바구니로 이동하겠습니까?")) {
-              location.href = "/cart/cart_list";
+        dataType: 'json',
+        success: function(response) {
+            // 로그인 체크
+            if(response.needLogin) {
+                alert(response.message);
+                location.href = '/member/login';
+                return;
             }
-          }
+            // 성공 처리
+            if(response.success) {
+                alert("장바구니에 등록되었습니다");
+                if(confirm("장바구니로 이동하겠습니까?")) {
+                    location.href = "/cart/cart_list";
+                }
+            }
+        },
+        error: function(xhr) {
+            if(xhr.responseJSON && xhr.responseJSON.needLogin) {
+                alert(xhr.responseJSON.message);
+                window.location.href = '/member/login';
+            } else {
+                alert('오류가 발생했습니다.');
+            }
         }
-      });
     });
+});
 	
 	 // 바로구매 name="btn_direct_buy"
     $("button[name='btn_direct_buy']").on("click", function() {

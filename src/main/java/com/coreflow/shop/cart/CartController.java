@@ -1,6 +1,7 @@
 package com.coreflow.shop.cart;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,15 +33,18 @@ public class CartController {
 	
 	// 장바구니추가
 	@PostMapping("/cart_add")
-	public ResponseEntity<String> cart_add(CartDTO dto, HttpSession session) throws Exception {
-		ResponseEntity<String> entity = null;
+	public ResponseEntity<Map<String, Object>> cart_add(CartDTO dto, HttpSession session) throws Exception {
+		ResponseEntity<Map<String, Object>> entity = null;
 		
 		String mbsp_id = ((MemberDTO) session.getAttribute("login_auth")).getMbsp_id();
 		dto.setMbsp_id(mbsp_id);
 		
 		cartService.cart_add(dto);
 		
-		entity = new ResponseEntity<String>("success", HttpStatus.OK);
+		Map<String, Object> response = new HashMap<>();
+		response.put("success", true);
+		
+		entity = new ResponseEntity<>(response, HttpStatus.OK);
 		
 		return entity;
 	}
