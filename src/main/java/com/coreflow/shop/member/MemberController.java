@@ -144,7 +144,7 @@ public class MemberController {
 	
 	// 카카오 로그인 API서버에서 호출받게되는 주소.
 		// 카카오 디벨로퍼 사이트에서 로그인작업을 위하여 미리 설정해둠.
-	@GetMapping(value="/kakao/callback")
+	@GetMapping(value="kakao/callback")
 	public String loginKakaoRedirect(KakaoLoginDto dto, MemberDTO mdto, Model model, HttpSession session) throws Exception {
 
 	    System.out.println("토큰요청인가코드: "+dto.getCode());
@@ -234,7 +234,7 @@ public class MemberController {
 		
 		model.addAttribute("memberDTO", vo);
 		
-			url = "/member/modify";
+			url = "member/modify";
 		} else {
 			url = "redirect:/member/login";
 		}
