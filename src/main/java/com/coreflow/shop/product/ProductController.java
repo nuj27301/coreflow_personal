@@ -51,19 +51,18 @@ public class ProductController {
 				
 	}
 	
+	// 상품 상세페이지
+	@GetMapping("/pro_detail")
+	public void pro_detail(Integer pro_num, @ModelAttribute("cate_name") String cate_name, Model model) throws Exception {
+
+		model.addAttribute("productDTO", productService.pro_detail(pro_num));
+	}
+	
 	// 주문상품이미지 보여주기
 	@GetMapping("/image_display")
 	public ResponseEntity<byte[]> image_display(String dateFolderName, String fileName) throws Exception {
 		
 		return FileUtils.getFile(uploadPath + File.separator + dateFolderName, fileName);
 	}
-	
-	// 상품 상세페이지
-		@GetMapping("/pro_detail")
-		public void pro_detail(Integer pro_num, @ModelAttribute("cate_name") String cate_name, Model model) throws Exception {
-
-			model.addAttribute("productDTO", productService.pro_detail(pro_num));
-		}
-	
 
 }

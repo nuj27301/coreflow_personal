@@ -6,7 +6,7 @@
 
 	select 
 		r.rev_code, r.mbsp_id, r.pro_num, r.rev_content, r.rev_rate, r.rev_date,
-		rr.rev_code, rr.manager_id, rr.reply_id, rr.reply_text, rr.reply_date 
+		rr.manager_id, rr.reply_id, rr.reply_text, rr.reply_date 
 	from 
 		review r 
 	left outer join 
