@@ -107,38 +107,29 @@ public class KakaoLoginService {
         Map<String, Object> kakao_account = (Map<String, Object>) jsonMap.get("kakao_account");
 
         Long id       = (Long) jsonMap.get("id");
-        // 닉네임 사용 (name 대신)
-        String nickname = properties != null && properties.get("nickname") != null
-            ? properties.get("nickname").toString()
-            : "카카오사용자";
-        
-        // 이메일
-        String email = kakao_account != null && kakao_account.get("email") != null
-            ? kakao_account.get("email").toString()
-            : null;
-        
-        if (email == null) {
-            throw new RuntimeException("이메일 정보를 가져올 수 없습니다.");
-        }
+        String name   = kakao_account.get("name").toString();
+        String email  = kakao_account.get("email").toString();
 //        String gender = kakao_account.get("gender").toString();
 //        String phone  = kakao_account.get("phone_number").toString();
         
-        /*
         if(properties != null) {
         	String nickname     = properties.get("nickname").toString();
         	String profileImage = properties.get("profile_image").toString();  
         	
-            dto.setNickname(nickname);
-            dto.setProfile_image(profileImage);        	
+            dto.setName(nickname);
+//            dto.setProfile_image(profileImage);        	
         }
-        */
 
         //userInfo에 넣기
         dto.setId(id);
-        dto.setName(nickname);
+        dto.setName(name);
         dto.setEmail(email);
 //        dto.setPhone(phone);
         
+        if (name == null || name.trim().isEmpty()) {
+            // 이름 정보가 NULL 또는 빈 문자열일 경우 "카카오 사용자"로 대체
+            name = "카카오사용자";
+        }
         // 성별
 //        if(gender.equals("male")) {
 //        	dto.setGenderCd(null); // 남
