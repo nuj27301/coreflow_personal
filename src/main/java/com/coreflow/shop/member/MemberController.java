@@ -140,7 +140,7 @@ public class MemberController {
 //		session.invalidate(); // 세션으로 관리되는 서버쪽의 모든 메모리소멸.
 //		
 //		return "redirect:/"; // 메인주소로 이동
-//	}
+//	} 
 	
 	// 카카오 로그인 API서버에서 호출받게되는 주소.
 		// 카카오 디벨로퍼 사이트에서 로그인작업을 위하여 미리 설정해둠.
