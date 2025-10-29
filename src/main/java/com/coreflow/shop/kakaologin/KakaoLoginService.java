@@ -103,12 +103,23 @@ public class KakaoLoginService {
         });
 
         //사용자 정보 추출
-        //Map<String, Object> properties = (Map<String, Object>) jsonMap.get("properties");
+        Map<String, Object> properties = (Map<String, Object>) jsonMap.get("properties");
         Map<String, Object> kakao_account = (Map<String, Object>) jsonMap.get("kakao_account");
 
         Long id       = (Long) jsonMap.get("id");
-        String name   = kakao_account.get("name").toString();
-        String email  = kakao_account.get("email").toString();
+        // 닉네임 사용 (name 대신)
+        String nickname = properties != null && properties.get("nickname") != null
+            ? properties.get("nickname").toString()
+            : "카카오사용자";
+        
+        // 이메일
+        String email = kakao_account != null && kakao_account.get("email") != null
+            ? kakao_account.get("email").toString()
+            : null;
+        
+        if (email == null) {
+            throw new RuntimeException("이메일 정보를 가져올 수 없습니다.");
+        }
 //        String gender = kakao_account.get("gender").toString();
 //        String phone  = kakao_account.get("phone_number").toString();
         
@@ -124,14 +135,10 @@ public class KakaoLoginService {
 
         //userInfo에 넣기
         dto.setId(id);
-        dto.setName(name);
+        dto.setName(nickname);
         dto.setEmail(email);
 //        dto.setPhone(phone);
         
-        if (name == null || name.trim().isEmpty()) {
-            // 이름 정보가 NULL 또는 빈 문자열일 경우 "카카오 사용자"로 대체
-            name = "카카오사용자";
-        }
         // 성별
 //        if(gender.equals("male")) {
 //        	dto.setGenderCd(null); // 남
