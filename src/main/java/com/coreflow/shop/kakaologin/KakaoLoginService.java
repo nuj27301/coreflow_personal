@@ -106,36 +106,65 @@ public class KakaoLoginService {
         Map<String, Object> properties = (Map<String, Object>) jsonMap.get("properties");
         Map<String, Object> kakao_account = (Map<String, Object>) jsonMap.get("kakao_account");
 
-        Long id       = (Long) jsonMap.get("id");
-        String name   = kakao_account.get("name").toString();
-        String email  = kakao_account.get("email").toString();
-//        String gender = kakao_account.get("gender").toString();
-//        String phone  = kakao_account.get("phone_number").toString();
-        
-        if(properties != null) {
-        	String nickname     = properties.get("nickname").toString();
-        	String profileImage = properties.get("profile_image").toString();  
-        	
-            dto.setName(nickname);
-//            dto.setProfile_image(profileImage);        	
+     // ID 추출
+        Long id = (Long) jsonMap.get("id");
+        dto.setId(id);
+
+        // kakao_account에서 정보 추출 (null 체크)
+        String name = "카카오사용자";  // 기본값
+        String email = null;
+        String nickname = null;
+        String profileImage = null;
+
+        if (kakao_account != null) {
+            // 이름 추출 (있는 경우)
+            if (kakao_account.get("name") != null) {
+                name = kakao_account.get("name").toString();
+            }
+            
+            // 이메일 추출
+            if (kakao_account.get("email") != null) {
+                email = kakao_account.get("email").toString();
+                dto.setEmail(email);
+            }
+
+            // profile 객체에서 nickname 추출
+            Map<String, Object> profile = (Map<String, Object>) kakao_account.get("profile");
+            if (profile != null) {
+                if (profile.get("nickname") != null) {
+                    nickname = profile.get("nickname").toString();
+                }
+                if (profile.get("profile_image_url") != null) {
+                    profileImage = profile.get("profile_image_url").toString();
+                }
+            }
         }
 
-        //userInfo에 넣기
-        dto.setId(id);
-        dto.setName(name);
-        dto.setEmail(email);
-//        dto.setPhone(phone);
-        
-        if (name == null || name.trim().isEmpty()) {
-            // 이름 정보가 NULL 또는 빈 문자열일 경우 "카카오 사용자"로 대체
-            name = "카카오사용자";
+        // properties에서 정보 추출 (profile에 없는 경우 대비)
+        if (properties != null) {
+            if (nickname == null && properties.get("nickname") != null) {
+                nickname = properties.get("nickname").toString();
+            }
+            if (profileImage == null && properties.get("profile_image") != null) {
+                profileImage = properties.get("profile_image").toString();
+            }
         }
-        // 성별
-//        if(gender.equals("male")) {
-//        	dto.setGenderCd(null); // 남
-//        } else {
-//        	dto.setGenderCd(null); // 여
-//        }
+
+        // 최종 이름 결정: nickname이 있으면 사용, 없으면 name 사용
+        if (nickname != null && !nickname.trim().isEmpty()) {
+            dto.setName(nickname);
+        } else if (name != null && !name.trim().isEmpty()) {
+            dto.setName(name);
+        } else {
+            dto.setName("카카오사용자");
+        }
+
+        // 프로필 이미지 설정 (필요시 주석 해제)
+        // if (profileImage != null) {
+        //     dto.setProfile_image(profileImage);
+        // }
+
+        br.close();
 
         return dto;
     }	
