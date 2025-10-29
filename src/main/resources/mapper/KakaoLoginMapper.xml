@@ -45,14 +45,14 @@
 			#{mbsp_id},
 			#{mbsp_name},
 			#{mbsp_email},
-			#{mbsp_password},
-			#{mbsp_zipcode},
-			#{mbsp_address},
-			#{mbsp_addressdetail},
-			#{mbsp_phone},
-			#{mbsp_gender},
-			#{mbsp_receive},
-			#{mbsp_birthdate}
+			COALESCE(#{mbsp_password}, 'KAKAO_USER'),
+	        COALESCE(#{mbsp_zipcode}, '00000'),
+	        COALESCE(#{mbsp_address}, '미입력'),
+	        COALESCE(#{mbsp_addressDetail}, ''),
+	        COALESCE(#{mbsp_phone}, '000-0000-0000'),
+	        COALESCE(#{mbsp_gender}, 'N'),
+	        COALESCE(#{mbsp_receive}, 'N'),
+	        COALESCE(#{mbsp_birthdate}, '1900-01-01')
 			)
         
     </insert>
