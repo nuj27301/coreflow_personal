@@ -2,59 +2,37 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coreflow.shop.kakaologin.KakaoLoginDao">
 
-    <!-- 이메일로 회원 조회 -->
-    <select id="findMemberByEmail" resultType="com.coreflow.shop.common.dto.MemberDTO">
-    
-        SELECT 
-            mbsp_id,
-			mbsp_name,
-			mbsp_email,
-			mbsp_password,
-			mbsp_zipcode,
-			mbsp_address,
-			mbsp_addressdetail,
-			mbsp_phone,
-			mbsp_gender,
-			mbsp_receive,
-			mbsp_birthdate
-        FROM members
-        WHERE mbsp_email = #{email}
-        
-    </select>
-
-    <!-- 카카오 회원을 mbsp_member 테이블에 등록 -->
-    <insert id="insertKakaoMember">
-    
-        insert into
-			members
-			(
-			mbsp_id,
-			mbsp_name,
-			mbsp_email,
-			mbsp_password,
-			mbsp_zipcode,
-			mbsp_address,
-			mbsp_addressdetail,
-			mbsp_phone,
-			mbsp_gender,
-			mbsp_receive,
-			mbsp_birthdate
-			)
-		values
-			(
-			#{mbsp_id},
-			#{mbsp_name},
-			#{mbsp_email},
-			COALESCE(#{mbsp_password}, 'KAKAO_USER'),
-	        COALESCE(#{mbsp_zipcode}, '00000'),
-	        COALESCE(#{mbsp_address}, '미입력'),
-	        COALESCE(#{mbsp_addressDetail}, ''),
-	        COALESCE(#{mbsp_phone}, '000-0000-0000'),
-	        COALESCE(#{mbsp_gender}, 'N'),
-	        COALESCE(#{mbsp_receive}, 'N'),
-	        COALESCE(#{mbsp_birthdate}, '1900-01-01')
-			)
-        
-    </insert>
+  	<!-- SNS ID로 회원 조회 -->
+	<select id="findBySnsId" resultType="com.coreflow.shop.common.dto.MemberDTO">
+	    SELECT * FROM members
+	    WHERE mbsp_sns_id = #{mbsp_sns_id}
+	    AND mbsp_login_type = #{mbsp_login_type}
+	</select>
+	
+	<!-- 이메일로 회원 조회 (카카오 이메일 중복 체크용) -->
+	<select id="findByEmail" resultType="com.coreflow.shop.common.dto.MemberDTO">
+	    SELECT * FROM members
+	    WHERE mbsp_email = #{mbsp_email}
+	</select>
+	
+	<!-- 카카오 회원 자동 가입 -->
+	<insert id="insertKakaoMember">
+	    INSERT INTO members (
+	        mbsp_id, mbsp_name, mbsp_email, mbsp_password,
+	        mbsp_login_type, mbsp_sns_id, mbsp_point,
+	        mbsp_datesub, mbsp_receive
+	    ) VALUES (
+	        #{mbsp_id}, #{mbsp_name}, #{mbsp_email}, 'kakao_user',
+	        #{mbsp_login_type}, #{mbsp_sns_id}, 0,
+	        NOW(), 'N'
+	    )
+	</insert>
+	
+	<!-- 마지막 로그인 시간 업데이트 -->
+	<update id="updateLastLogin">
+	    UPDATE members
+	    SET mbsp_lastlogin = NOW()
+	    WHERE mbsp_id = #{mbsp_id}
+	</update>
 
 </mapper>

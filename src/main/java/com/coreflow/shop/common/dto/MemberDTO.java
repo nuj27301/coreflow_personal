@@ -2,8 +2,6 @@ package com.coreflow.shop.common.dto;
 
 import java.util.Date;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -28,5 +26,9 @@ public class MemberDTO {
 	private Date mbsp_lastlogin;
 	private Date mbsp_datesub;
 	private Date mbsp_updatedate;
+	
+	// 카카오 로그인 추가 필드
+    private String mbsp_login_type;  // normal, kakao
+    private String mbsp_sns_id;       // 카카오 고유 ID
 	
 }

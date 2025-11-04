@@ -1,222 +1,247 @@
 package com.coreflow.shop.kakaologin;
 
 import java.io.BufferedReader;
-import java.io.IOException;
+import java.io.BufferedWriter;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 
 import com.coreflow.shop.common.dto.MemberDTO;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-
 @Slf4j
+@RequiredArgsConstructor
 @Service
 public class KakaoLoginService {
-	
-	
-	@Value("${kakao.token_url}")
-	private String token_url;
-	
-	@Value("${kakao.user.logout}")
-	private String kakaologout;
-	
-	@Autowired
-	KakaoLoginDao dao;
-	
-	// 토큰요청
-	public String getAccessTokenFromKakao(String client_id, String code, String redirect_uri, String client_secret) throws IOException {
-        //------kakao POST 요청------
-        String reqURL = token_url + "?grant_type=authorization_code&client_id="+client_id+"&code="+code+"&redirect_uri="+redirect_uri+"&client_secret=" + client_secret + "&prompt=login";
-        URL url = new URL(reqURL);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("POST");
-
-        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-
-        String line = "";
-        String result = "";
-
-        while ((line = br.readLine()) != null) {
-            result += line;
-        }
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, Object> jsonMap = objectMapper.readValue(result, new TypeReference<Map<String, Object>>() {});
-
-        //System.out.println("Response Body : " + result);
-
-        String accessToken = (String) jsonMap.get("access_token");
-        //String refreshToken = (String) jsonMap.get("refresh_token");
-        //String scope = (String) jsonMap.get("scope");
-
-        return accessToken;
-    }
-	
-	// 사용자정보조회
-	public KakaoLoginDto getUserInfo(String access_Token, KakaoLoginDto dto) throws IOException {
-        //------kakao GET 요청------
-        String reqURL = "https://kapi.kakao.com/v2/user/me"; // 카카오서버로부터 개인정보를 참조하는 주소.
+    
+    @Value("${kakao.client_id}")
+    private String clientId;
+    
+    @Value("${kakao.redirect_uri}")
+    private String redirectUri;
+    
+    @Value("${kakao.client_secret}")
+    private String clientSecret;
+    
+    private final KakaoLoginDao kakaoLoginDao;
+    
+    /**
+     * 카카오 로그인 URL 생성
+     */
+    public String getKakaoLoginUrl() {
+        String kakaoUrl = "https://kauth.kakao.com/oauth/authorize"
+                + "?client_id=" + clientId
+                + "&redirect_uri=" + redirectUri
+                + "&response_type=code";
         
-        URL url = new URL(reqURL);
-        
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-        conn.setRequestProperty("Authorization", "Bearer " + access_Token);
-
-        int responseCode = conn.getResponseCode();
-        System.out.println("responseCode : " + responseCode);
-
-        // 입력스트림 작업.
-        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-
-        String line = "";
-        String result = "";
-
-        while ((line = br.readLine()) != null) {
-            result += line;
-        }
-
-        // 카카오 서버로부터 개인정보를 받아옴.
-        System.out.println("Response Body : " + result);
-
-        // jackson objectmapper 객체 생성
-        ObjectMapper objectMapper = new ObjectMapper();
-        // JSON String -> Map
-        Map<String, Object> jsonMap = objectMapper.readValue(result, new TypeReference<Map<String, Object>>() {
-        });
-
-        //사용자 정보 추출
-        Map<String, Object> properties = (Map<String, Object>) jsonMap.get("properties");
-        Map<String, Object> kakao_account = (Map<String, Object>) jsonMap.get("kakao_account");
-
-     // ID 추출
-        Long id = (Long) jsonMap.get("id");
-        dto.setId(id);
-
-        // kakao_account에서 정보 추출 (null 체크)
-        String name = "카카오사용자";  // 기본값
-        String email = null;
-        String nickname = null;
-        String profileImage = null;
-
-        if (kakao_account != null) {
-            // 이름 추출 (있는 경우)
-            if (kakao_account.get("name") != null) {
-                name = kakao_account.get("name").toString();
-            }
-            
-            // 이메일 추출
-            if (kakao_account.get("email") != null) {
-                email = kakao_account.get("email").toString();
-                dto.setEmail(email);
-            }
-
-            // profile 객체에서 nickname 추출
-            Map<String, Object> profile = (Map<String, Object>) kakao_account.get("profile");
-            if (profile != null) {
-                if (profile.get("nickname") != null) {
-                    nickname = profile.get("nickname").toString();
-                }
-                if (profile.get("profile_image_url") != null) {
-                    profileImage = profile.get("profile_image_url").toString();
-                }
-            }
-        }
-
-        // properties에서 정보 추출 (profile에 없는 경우 대비)
-        if (properties != null) {
-            if (nickname == null && properties.get("nickname") != null) {
-                nickname = properties.get("nickname").toString();
-            }
-            if (profileImage == null && properties.get("profile_image") != null) {
-                profileImage = properties.get("profile_image").toString();
-            }
-        }
-
-        // 최종 이름 결정: nickname이 있으면 사용, 없으면 name 사용
-        if (nickname != null && !nickname.trim().isEmpty()) {
-            dto.setName(nickname);
-        } else if (name != null && !name.trim().isEmpty()) {
-            dto.setName(name);
-        } else {
-            dto.setName("카카오사용자");
-        }
-
-        // 프로필 이미지 설정 (필요시 주석 해제)
-        // if (profileImage != null) {
-        //     dto.setProfile_image(profileImage);
-        // }
-
-        br.close();
-
-        return dto;
-    }	
-	
-//	 로그인 id 확인
-	public KakaoLoginDto kakaoOne(KakaoLoginDto dto) {
-		return dao.kakaoOne(dto);
-	};
-	
-	// 카카오 로그인 확인
-    public MemberDTO findMemberByEmail(String email) {
-        return dao.findMemberByEmail(email);
+        log.info("카카오 로그인 URL: {}", kakaoUrl);
+        return kakaoUrl;
     }
     
-    public void insertKakaoMember(MemberDTO member) {
-        dao.insertKakaoMember(member);
+    /**
+     * 인가 코드로 액세스 토큰 발급
+     */
+    private String getAccessToken(String code) {
+        String accessToken = "";
+        String reqURL = "https://kauth.kakao.com/oauth/token";
+
+        try {
+            URL url = new URL(reqURL);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            
+            conn.setRequestMethod("POST");
+            conn.setDoOutput(true);
+            
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
+            StringBuilder sb = new StringBuilder();
+            sb.append("grant_type=authorization_code");
+            sb.append("&client_id=" + clientId);
+            sb.append("&client_secret=" + clientSecret);
+            sb.append("&redirect_uri=" + redirectUri);
+            sb.append("&code=" + code);
+            
+            bw.write(sb.toString());
+            bw.flush();
+            
+            int responseCode = conn.getResponseCode();
+            log.info("카카오 토큰 요청 응답코드: {}", responseCode);
+            
+            BufferedReader br;
+            if (responseCode == 200) {
+                br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            } else {
+                br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+            }
+            
+            String line = "";
+            String result = "";
+            
+            while ((line = br.readLine()) != null) {
+                result += line;
+            }
+            
+            log.info("카카오 토큰 응답: {}", result);
+            
+            if (responseCode == 200) {
+                JSONParser parser = new JSONParser();
+                JSONObject elem = (JSONObject) parser.parse(result);
+                accessToken = elem.get("access_token").toString();
+            } else {
+                log.error("카카오 토큰 발급 실패. 응답: {}", result);
+                throw new RuntimeException("카카오 인증에 실패했습니다. REST API 키와 Redirect URI를 확인해주세요.");
+            }
+            
+            br.close();
+            bw.close();
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("카카오 토큰 발급 실패", e);
+            throw new RuntimeException("카카오 로그인 중 오류가 발생했습니다.");
+        }
+        
+        return accessToken;
     }
-	
-	// 회원등록
-	public int kakaoInsert(KakaoLoginDto dto) {
-		return dao.kakaoInsert(dto);
-	};
-	
-	// 카카오 로그아웃.  https://kauth.kakao.com/oauth/logout.  헤더는 있고, 파라미터는 없는 경우.
-	// 헤더 Authorization: Bearer ${ACCESS_TOKEN}
-	public void kakaologout(String accessToken) throws JsonProcessingException {
-		
-		// Http Header 생성.
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Authorization", "Bearer " + accessToken);
-		headers.add("Content-type", "application/x-www-form-urlencoded");
-		
-		// Http 요청작업.
-		HttpEntity<MultiValueMap<String, String>> kakaoLogoutRequest = new HttpEntity<>(headers);
-		
-		// Http 요청하기
-		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<String> response = restTemplate.exchange(kakaologout, HttpMethod.POST, kakaoLogoutRequest, String.class);
-		
-		//리턴된 정보 : JSON포맷의 문자열.
-		String responseBody = response.getBody();
-		log.info("responseBody:" + responseBody);
-		
-		// JSON문자열을 Java객체로 역직렬화 하거나 Java객체를 JSON으로 직렬화 할 때 사용하는 Jackson라이브러리의 클래스이다.
-		// ObjectMapper 생성 비용이 비싸기때문에 bena/static 으로 처리하는 것이 성능에 좋다.
-		ObjectMapper objectMapper = new ObjectMapper();
-		JsonNode jsonNode = objectMapper.readTree(responseBody);
-		
-		Long id = jsonNode.get("id").asLong();
-		
-		log.info("id:" + id); // 로그아웃 이후 카카오에서 응답한 카카오회원번호
-		
-	}
-	
+    
+    /**
+     * 액세스 토큰으로 카카오 사용자 정보 조회
+     */
+    private Map<String, Object> getUserInfo(String accessToken) {
+        Map<String, Object> userInfo = new HashMap<>();
+        String reqURL = "https://kapi.kakao.com/v2/user/me";
+        
+        try {
+            URL url = new URL(reqURL);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Authorization", "Bearer " + accessToken);
+            
+            int responseCode = conn.getResponseCode();
+            log.info("카카오 사용자 정보 요청 응답코드: {}", responseCode);
+            
+            BufferedReader br;
+            if (responseCode == 200) {
+                br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            } else {
+                br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+            }
+            
+            String line = "";
+            String result = "";
+            
+            while ((line = br.readLine()) != null) {
+                result += line;
+            }
+            
+            log.info("카카오 사용자 정보 응답: {}", result);
+            
+            if (responseCode == 200) {
+                JSONParser parser = new JSONParser();
+                JSONObject elem = (JSONObject) parser.parse(result);
+                
+                JSONObject kakaoAccount = (JSONObject) elem.get("kakao_account");
+                JSONObject profile = (JSONObject) kakaoAccount.get("profile");
+                
+                String id = elem.get("id").toString();
+                String email = kakaoAccount.get("email") != null ? kakaoAccount.get("email").toString() : "";
+                String nickname = profile.get("nickname").toString();
+                
+                userInfo.put("id", id);
+                userInfo.put("email", email);
+                userInfo.put("nickname", nickname);
+            } else {
+                log.error("카카오 사용자 정보 조회 실패. 응답: {}", result);
+                throw new RuntimeException("카카오 사용자 정보 조회에 실패했습니다.");
+            }
+            
+            br.close();
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("카카오 사용자 정보 조회 실패", e);
+            throw new RuntimeException("카카오 사용자 정보 조회 중 오류가 발생했습니다.");
+        }
+        
+        return userInfo;
+    }
+    
+    /**
+     * 카카오 로그인 전체 프로세스 처리
+     * @param code 카카오 인가 코드
+     * @return 로그인된 회원 정보
+     * @throws RuntimeException 이미 일반 회원으로 가입된 이메일인 경우
+     */
+    public MemberDTO processKakaoLogin(String code) {
+        // 1. 액세스 토큰 발급
+        String accessToken = getAccessToken(code);
+        
+        if (accessToken == null || accessToken.isEmpty()) {
+            throw new RuntimeException("카카오 액세스 토큰 발급에 실패했습니다.");
+        }
+        
+        log.info("카카오 액세스 토큰 발급 성공");
+        
+        // 2. 사용자 정보 조회
+        Map<String, Object> userInfo = getUserInfo(accessToken);
+        
+        String kakaoId = (String) userInfo.get("id");
+        String email = (String) userInfo.get("email");
+        String nickname = (String) userInfo.get("nickname");
+        
+        if (kakaoId == null || kakaoId.isEmpty()) {
+            throw new RuntimeException("카카오 사용자 정보를 가져올 수 없습니다.");
+        }
+        
+        log.info("카카오 사용자 정보 조회 - ID: {}, Email: {}, Nickname: {}", kakaoId, email, nickname);
+        
+        // 3. 이메일로 기존 일반 회원 존재 여부 확인
+        if (email != null && !email.isEmpty()) {
+            MemberDTO existingMember = kakaoLoginDao.findByEmail(email);
+            if (existingMember != null && "normal".equals(existingMember.getMbsp_login_type())) {
+                // 이미 일반 회원으로 가입된 이메일
+                log.warn("이미 일반 회원으로 가입된 이메일: {}", email);
+                throw new RuntimeException("이미 일반 회원으로 가입된 이메일입니다. 일반 로그인을 이용해주세요.");
+            }
+        }
+        
+        // 4. 카카오 ID로 기존 카카오 회원 조회
+        MemberDTO member = kakaoLoginDao.findBySnsId(kakaoId, "kakao");
+        
+        if (member == null) {
+            // 5. 신규 카카오 회원 자동 가입
+            member = createKakaoMember(kakaoId, email, nickname);
+            kakaoLoginDao.insertKakaoMember(member);
+            log.info("카카오 신규 회원 가입 완료: {}", member.getMbsp_id());
+        } else {
+            // 6. 기존 회원 마지막 로그인 시간 업데이트
+            kakaoLoginDao.updateLastLogin(member.getMbsp_id());
+            log.info("카카오 기존 회원 로그인: {}", member.getMbsp_id());
+        }
+        
+        return member;
+    }
+    
+    /**
+     * 카카오 회원 DTO 생성
+     */
+    private MemberDTO createKakaoMember(String kakaoId, String email, String nickname) {
+        MemberDTO member = new MemberDTO();
+        member.setMbsp_id("kakao_" + kakaoId); // 카카오 ID를 사용한 고유 아이디 생성
+        member.setMbsp_name(nickname);
+        member.setMbsp_email(email);
+        member.setMbsp_login_type("kakao");
+        member.setMbsp_sns_id(kakaoId);
+        
+        return member;
+    }
 }
