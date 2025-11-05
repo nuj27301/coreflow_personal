@@ -274,10 +274,13 @@
       let pro_num = $(this).data("pro_num");
       let buy_amount = $(this).parents("div.card").find("input[type='number'][name='quantity']").val();
       
+      console.log("바로구매 - 상품번호:", pro_num, "수량:", buy_amount);
+      
       $.ajax({
           url: '/cart/cart_add',
           type: 'post',
           headers: {'AJAX': 'true'},
+          data: {pro_num: pro_num, cart_amount: buy_amount},
           dataType: 'json',
           success: function(response) {
               // 로그인 체크
@@ -293,7 +296,8 @@
                   }
               }
           },
-          error: function(xhr) {
+          error: function(xhr, status, error) {
+              console.error("에러 상세:", xhr.responseText, status, error);
               if(xhr.responseJSON && xhr.responseJSON.needLogin) {
                   alert(xhr.responseJSON.message);
                   window.location.href = '/member/login';
