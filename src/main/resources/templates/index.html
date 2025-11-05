@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
 
     <th:block layout:fragment="css">
@@ -102,6 +103,77 @@
             #productCarousel .btn-action-main i {
                 margin-right: 5px;
             }
+            
+             /* 반응형 (태블릿 이하) */
+	    @media (max-width: 992px) {
+	        /* 상품 카드 높이 자동 조정 */
+	        #productCarousel .product-card img {
+	            height: 200px;
+	        }
+	
+	        /* 카드 간격 조정 */
+	        #productCarousel .card-body {
+	            padding: 12px;
+	        }
+	
+	        /* 폰트 크기 조정 */
+	        #productCarousel .card-title {
+	            font-size: 0.9rem;
+	        }
+	
+	        #productCarousel .btn-action-main {
+	            font-size: 0.8rem;
+	            padding: 0.4rem;
+	        }
+	
+	        /* 슬라이드 텍스트 조정 */
+	        .carousel-caption h2 {
+	            font-size: 1.5rem;
+	        }
+	
+	        .carousel-caption p {
+	            font-size: 1rem;
+	        }
+	    }
+	
+	    /* 반응형 (모바일 전용) */
+	    @media (max-width: 576px) {
+	        /* 캐러셀 이미지 크기 줄이기 */
+	        .carousel-item img {
+	            height: 200px;
+	            object-fit: cover;
+	        }
+	
+	        /* 추천상품 카드 한 줄에 하나씩 */
+	        #productCarousel .row-cols-md-5 {
+	            grid-template-columns: repeat(1, 1fr);
+	        }
+	
+	        /* 버튼 정렬 및 크기 조정 */
+	        #productCarousel .btn-action-main {
+	            font-size: 0.8rem;
+	            padding: 0.3rem 0.5rem;
+	        }
+	
+	        /* 제목, 글자 크기 더 줄이기 */
+	        #productCarousel .card-title {
+	            font-size: 0.85rem;
+	        }
+	
+	        /* 구분선과 섹션 타이틀 조정 */
+	        .section-title-container {
+	            flex-direction: column;
+	        }
+	
+	        .custom-hr {
+	            display: none;
+	        }
+	
+	        .section-title {
+	            font-size: 1.2rem;
+	        }
+	    }
+            
         </style>
     </th:block>
 </head>
