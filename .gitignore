@@ -33,5 +33,4 @@ build/
 .vscode/
 
 # 환경 설정 파일(보안정보) 
-application-private.properties
 application-real.properties
